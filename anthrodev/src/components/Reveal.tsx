@@ -6,7 +6,7 @@ interface RevealProps {
   className?: string
   /** Stagger in ms. */
   delay?: number
-  children: ReactNode
+  children?: ReactNode
 }
 
 /** Fades and lifts its children in the first time they enter the viewport. */
