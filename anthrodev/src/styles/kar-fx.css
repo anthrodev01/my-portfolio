@@ -1,0 +1,835 @@
+/* ==========================================================================
+   KAR case study — creative layer
+
+   Same rules as the Afrixa and homepage layers:
+     - colour / outline / state changes are for everyone
+     - anything that moves lives inside prefers-reduced-motion: no-preference
+     - pointer effects live inside (hover: hover)
+     - entrances use `animation … backwards` so hover transitions are never
+       held back by a stagger delay
+     - movement uses the individual translate / scale / rotate properties so
+       it composes with the transform used by .reveal and by entrances
+   Nothing here changes a box size, so the layout stays pinned to the design.
+   ========================================================================== */
+
+/* ---- Purple spotlight on cards (glow follows the mouse) -------------------- */
+.kar-spot {
+  position: relative;
+  isolation: isolate;
+}
+.kar-spot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgb(132 56 163 / 0.16), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .kar-spot:hover::after {
+    opacity: 1;
+  }
+  .kar-spot {
+    transition: box-shadow 0.4s var(--ease), border-color 0.4s var(--ease);
+  }
+  .kar-spot:hover {
+    border-color: var(--kp);
+    box-shadow: 0 18px 40px -22px rgb(90 11 116 / 0.55);
+  }
+}
+
+/* ---- Annotated home screen: hotspots tie the copy to the screen ------------ */
+.kar-hot {
+  position: relative;
+}
+.kar-hot__spot {
+  position: absolute;
+  z-index: 2;
+  box-sizing: border-box;
+  display: block;
+  border: 2px solid var(--kp);
+  border-radius: 10px;
+  background: rgb(90 11 116 / 0.1);
+  box-shadow: 0 0 0 5px rgb(90 11 116 / 0.14);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s var(--ease);
+}
+.kar-hot__spot.is-on {
+  opacity: 1;
+}
+.kar-hot__spot b {
+  position: absolute;
+  left: -9px;
+  top: -9px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--kp);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+.kar-annot__list {
+  list-style: none;
+  counter-reset: pt;
+  padding-left: 0;
+}
+.kar-annot__list li {
+  position: relative;
+  margin-bottom: 6px;
+  padding: 6px 10px 6px 40px;
+  border-radius: 12px;
+  cursor: default;
+  counter-increment: pt;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.kar-annot__list li::before {
+  content: counter(pt);
+  position: absolute;
+  left: 8px;
+  top: 0.62em;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #eadff0;
+  color: var(--kp);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.kar-annot__list li.is-on {
+  background: #f3e9f8;
+  color: var(--kink);
+}
+.kar-annot__list li.is-on::before {
+  background: var(--kp);
+  color: #fff;
+}
+
+/* ---- Hover states that don't move anything --------------------------------- */
+.kar-back svg {
+  transition: translate 0.3s var(--ease);
+}
+.kar-back:hover svg,
+.kar-back:focus-visible svg {
+  translate: -3px 0;
+}
+.kar-back:focus-visible,
+.kar-flow__replay:focus-visible,
+.kar-proto__link:focus-visible,
+.kar-next__link:focus-visible {
+  outline: 2px solid var(--kp);
+  outline-offset: 4px;
+}
+.kar-back:focus-visible {
+  outline-color: #fff;
+}
+.kar-flow__replay {
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.kar-flow__replay span {
+  display: inline-block;
+}
+.kar-flow__replay:hover {
+  background: var(--kp);
+  color: #fff;
+  border-color: var(--kp);
+}
+.kar-proto__link {
+  transition: color 0.25s var(--ease);
+}
+.kar-proto__link svg {
+  transition: translate 0.3s var(--ease);
+}
+.kar-proto__link:hover {
+  color: var(--kdeep);
+}
+.kar-proto__link:hover svg,
+.kar-proto__link:focus-visible svg {
+  translate: 3px -3px;
+}
+.kar-next__title {
+  transition: color 0.3s var(--ease), translate 0.4s var(--ease);
+}
+.kar-next__arrow {
+  transition: translate 0.3s var(--ease);
+}
+.kar-next__link:hover .kar-next__title,
+.kar-next__link:focus-visible .kar-next__title {
+  color: #a8710f;
+  translate: 6px 0;
+}
+.kar-next__link:hover .kar-next__arrow,
+.kar-next__link:focus-visible .kar-next__arrow {
+  translate: 4px -4px;
+}
+.kar-ia__node,
+.kar-phase,
+.kar-step,
+.kar-outcome,
+.kar-proc__step {
+  transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease), color 0.3s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+.kar-phase__title,
+.kar-phase__label {
+  transition: color 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .kar-ia__node:hover {
+    background: #fff;
+    border-color: var(--kp);
+    box-shadow: 0 10px 22px -14px rgb(90 11 116 / 0.6);
+  }
+  .kar-ia__node:hover .kar-ia__num {
+    font-weight: 700;
+  }
+  .kar-phase:hover {
+    background: linear-gradient(180deg, #faf5fc, rgb(250 245 252 / 0));
+  }
+  .kar-phase:hover .kar-phase__title {
+    color: var(--kp);
+  }
+  .kar-step:hover {
+    border-color: var(--kp);
+    background: #fbf7fd;
+  }
+  .kar-outcome:hover {
+    box-shadow: 0 12px 24px -16px rgb(50 6 66 / 0.5);
+  }
+  .kar-proc__step:hover {
+    background: color-mix(in srgb, var(--c) 14%, #fff);
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--c) 18%, transparent);
+  }
+  .kar-persona__facts div:hover dd {
+    color: var(--knavy);
+  }
+  .kar-learn__portrait img {
+    transition: filter 0.7s var(--ease);
+  }
+  .kar-learn__portrait:hover img {
+    filter: grayscale(0);
+  }
+}
+
+/* "View" chip on screens: on hover for a mouse, always visible on touch */
+.kar-phone__chip {
+  opacity: 0;
+  transition: opacity 0.25s var(--ease);
+}
+.kar-phone:hover .kar-phone__chip,
+.kar-phone:focus-visible .kar-phone__chip {
+  opacity: 1;
+}
+@media (hover: none) {
+  .kar-phone__chip {
+    opacity: 0.92;
+  }
+}
+
+/* ==========================================================================
+   Motion
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  /* -- Hero ------------------------------------------------------------------ */
+  .kar-hero__title.cs-split .sw__w,
+  .js .kar-hero__title.cs-split .sw__w {
+    display: inline-block;
+    opacity: 1;
+    translate: 0 0;
+    transition: none;
+    animation: kar-rise 1s var(--ease) backwards;
+    animation-delay: calc(0.25s + var(--i, 0) * 0.085s);
+  }
+  .kar-hero__photo img {
+    scale: 1.12;
+    translate: 0 calc(var(--hs, 0) * 32px);
+    animation: kar-kenburns 2.6s var(--ease) backwards;
+  }
+  .kar-hero__lines img {
+    translate: 0 calc(var(--hs, 0) * -22px);
+  }
+  .kar-hero__logo {
+    translate: calc(var(--hx, 0) * 10px) calc(var(--hy, 0) * 6px + var(--hs, 0) * 44px);
+    transition: translate 0.45s var(--ease);
+    animation: kar-fade-in 1.2s var(--ease) 0.1s backwards;
+  }
+  .kar-hero__logo img {
+    animation: kar-glint 6s ease-in-out 1.6s infinite;
+  }
+  .kar-hero__title {
+    translate: 0 calc(var(--hs, 0) * 28px);
+  }
+  .kar-back {
+    animation: kar-fade-in 0.8s var(--ease) 0.5s backwards;
+  }
+  .kar-hero__phone {
+    transition: translate 0.45s var(--ease);
+    animation: kar-phone-in 1.3s var(--ease) backwards, kar-bob 8s ease-in-out 1.8s infinite;
+  }
+  .kar-hero__phone--l {
+    translate: calc(var(--hs, 0) * -36px + var(--hx, 0) * -8px) calc(var(--hs, 0) * -16px + var(--hy, 0) * -5px);
+    animation-delay: 0.55s, 1.9s;
+  }
+  .kar-hero__phone--c {
+    translate: calc(var(--hx, 0) * -4px) calc(var(--hs, 0) * -54px + var(--hy, 0) * -4px);
+    animation-delay: 0.75s, 2.4s;
+  }
+  .kar-hero__phone--r {
+    translate: calc(var(--hs, 0) * 36px + var(--hx, 0) * -8px) calc(var(--hs, 0) * -16px + var(--hy, 0) * -5px);
+    animation-delay: 0.95s, 2.9s;
+  }
+  .kar-facts li {
+    transition: translate 0.35s var(--ease);
+  }
+
+  /* -- Facts rise in one by one ------------------------------------------------ */
+  .js .kar-facts.reveal li {
+    opacity: 0;
+    translate: 0 14px;
+    transition: opacity 0.7s var(--ease), translate 0.8s var(--ease);
+    transition-delay: calc(var(--i, 0) * 80ms);
+  }
+  .js .kar-facts.reveal.is-visible li {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* -- Section rules and heading bars draw themselves -------------------------- */
+  .js .kar-head__bar {
+    transform: scaleX(0);
+    transition: transform 0.9s var(--ease) 0.25s;
+  }
+  .js .kar-head.is-visible .kar-head__bar {
+    transform: scaleX(1);
+  }
+  .js .kar-rule::before,
+  .js .kar-next::before {
+    transform: scaleX(0);
+    transition: transform 1.2s var(--ease);
+  }
+  .js .kar-rule.is-in::before,
+  .js .kar-next.is-in::before {
+    transform: scaleX(1);
+  }
+  .js .kar-learn__item::before {
+    transform: scaleX(0);
+    transition: transform 0.9s var(--ease) 0.2s;
+  }
+  .js .kar-learn__item.is-visible::before {
+    transform: scaleX(1);
+  }
+
+  /* -- Overview ----------------------------------------------------------------- */
+  .js .kar-card--challenge.reveal {
+    translate: -26px 0;
+  }
+  .js .kar-card--outcome.reveal {
+    translate: 26px 0;
+  }
+  .js .kar-card.reveal.is-visible {
+    translate: 0 0;
+  }
+  .kar-card__dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid var(--kp);
+    opacity: 0;
+    animation: kar-ping 2.8s ease-out infinite;
+  }
+  .kar-card--outcome .kar-card__dot::after {
+    animation-delay: 1.4s;
+  }
+  .js .kar-overview__link::before {
+    transform: scaleY(0);
+    transition: transform 0.9s var(--ease) 0.5s;
+  }
+  .js .kar-overview.is-in .kar-overview__link::before {
+    transform: scaleY(1);
+  }
+  .kar-float {
+    translate: 0 calc(var(--ps, 0) * -30px);
+  }
+  @media (hover: hover) {
+    .kar-card {
+      top: 0;
+      transition: top 0.4s var(--ease), box-shadow 0.4s var(--ease), border-color 0.4s var(--ease),
+        opacity 0.8s var(--ease), transform 0.8s var(--ease), translate 0.8s var(--ease);
+    }
+    .kar-card:hover {
+      top: -5px;
+    }
+  }
+
+  /* -- Design process: circles pop, loops draw ---------------------------------- */
+  .js .kar-proc__step {
+    opacity: 0;
+    scale: 0.6;
+  }
+  .js .kar-proc.is-in .kar-proc__step {
+    opacity: 1;
+    scale: 1;
+    transition: opacity 0.6s var(--ease), scale 0.8s var(--ease), background-color 0.3s var(--ease),
+      box-shadow 0.35s var(--ease);
+    transition-delay: calc(var(--i, 0) * 0.16s + 0.1s), calc(var(--i, 0) * 0.16s + 0.1s), 0s, 0s;
+  }
+  @media (hover: hover) {
+    .js .kar-proc.is-in .kar-proc__step:hover {
+      scale: 1.06;
+      transition-delay: 0s;
+    }
+  }
+  .js .kar-proc__arrow {
+    opacity: 0;
+    translate: -8px 0;
+  }
+  .js .kar-proc.is-in .kar-proc__arrow {
+    opacity: 1;
+    translate: 0 0;
+    transition: opacity 0.5s var(--ease), translate 0.6s var(--ease);
+    transition-delay: calc(var(--i, 0) * 0.16s + 0.35s);
+  }
+  .js .kar-proc__loops path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .js .kar-proc__loops .kar-proc__head {
+    stroke-dasharray: none;
+    opacity: 0;
+  }
+  .js .kar-proc.is-in .kar-proc__loops path:not(.kar-proc__head) {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1.5s var(--ease) 1s;
+  }
+  .js .kar-proc.is-in .kar-proc__loops path:nth-child(2) {
+    transition-delay: 1.5s;
+  }
+  .js .kar-proc.is-in .kar-proc__loops .kar-proc__head {
+    opacity: 1;
+    transition: opacity 0.5s var(--ease) 2.3s;
+  }
+
+  /* -- Timeline phases: dots pulse once when they arrive ------------------------ */
+  .js .kar-phase.is-visible::before {
+    animation: kar-dot 1s var(--ease) 0.3s backwards;
+  }
+
+  /* -- Persona ------------------------------------------------------------------- */
+  .js .kar-persona__photo.reveal {
+    scale: 0.94;
+  }
+  .js .kar-persona__photo.reveal.is-visible {
+    scale: 1;
+  }
+  .kar-persona__tilt {
+    transform-origin: 50% 50%;
+  }
+  .js .kar-hmw__list li {
+    opacity: 0;
+    translate: -14px 0;
+    transition: opacity 0.6s var(--ease), translate 0.7s var(--ease);
+    transition-delay: calc(var(--i, 0) * 0.1s + 0.25s);
+  }
+  .js .kar-hmw.is-visible .kar-hmw__list li {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .kar-persona::after,
+  .kar-learn::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 520px;
+    height: 520px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgb(132 56 163 / 0.1), transparent 66%);
+    pointer-events: none;
+    animation: kar-drift 14s ease-in-out infinite alternate;
+  }
+  .kar-persona::after {
+    right: -160px;
+    top: 120px;
+  }
+  .kar-learn::after {
+    left: -200px;
+    top: 260px;
+    animation-duration: 18s;
+  }
+  .kar-persona,
+  .kar-learn {
+    isolation: isolate;
+  }
+
+  /* -- Information architecture ----------------------------------------------------- */
+  .js .kar-ia__root {
+    clip-path: inset(0 50% -80px 50%);
+  }
+  .js .kar-arch.is-in .kar-ia__root {
+    clip-path: inset(0 0 -80px 0);
+    transition: clip-path 0.9s var(--ease) 0.15s;
+  }
+  .js .kar-ia__root::after,
+  .js .kar-ia__top::before,
+  .js .kar-ia__top li::before,
+  .js .kar-ia__grid::before,
+  .js .kar-ia__node::before {
+    transform: scale(0);
+  }
+  .js .kar-ia__root::after,
+  .js .kar-ia__top li::before,
+  .js .kar-ia__node::before {
+    transform-origin: 50% 0;
+  }
+  .js .kar-ia__top::before,
+  .js .kar-ia__grid::before {
+    transform-origin: 50% 50%;
+  }
+  .js .kar-arch.is-in .kar-ia__root::after,
+  .js .kar-arch.is-in .kar-ia__top::before,
+  .js .kar-arch.is-in .kar-ia__top li::before,
+  .js .kar-arch.is-in .kar-ia__grid::before,
+  .js .kar-arch.is-in .kar-ia__node::before {
+    transform: scale(1);
+    transition: transform 0.7s var(--ease) 0.8s;
+  }
+  .js .kar-ia__top li,
+  .js .kar-ia__node {
+    opacity: 0;
+    translate: 0 14px;
+  }
+  .js .kar-arch.is-in .kar-ia__top li,
+  .js .kar-arch.is-in .kar-ia__node {
+    opacity: 1;
+    translate: 0 0;
+    transition: opacity 0.6s var(--ease), translate 0.7s var(--ease), background-color 0.3s var(--ease),
+      border-color 0.3s var(--ease), box-shadow 0.35s var(--ease);
+    transition-delay: calc(var(--i, 0) * 70ms + 0.9s), calc(var(--i, 0) * 70ms + 0.9s), 0s, 0s, 0s;
+  }
+  @media (hover: hover) {
+    .js .kar-arch.is-in .kar-ia__node:hover {
+      translate: 0 -4px;
+      transition-delay: 0s;
+    }
+  }
+
+  /* -- Core user flow: the journey lights up step by step; replay re-runs it ------- */
+  .js .kar-flow.is-in .kar-step {
+    animation: kar-step 0.9s var(--ease) backwards;
+    animation-delay: calc(var(--i, 0) * 0.34s + 0.1s);
+  }
+  .js .kar-flow.is-in .kar-step:not(.kar-step--last)::after {
+    animation: kar-fade-in 0.5s var(--ease) backwards;
+    animation-delay: calc(var(--i, 0) * 0.34s + 0.4s);
+  }
+  .js .kar-flow.is-in .kar-decision {
+    animation: kar-decide 1s var(--ease) 3s backwards;
+  }
+  .js .kar-flow.is-in .kar-outcome--no {
+    animation: kar-slide-r 0.9s var(--ease) 3.6s backwards;
+  }
+  .js .kar-flow.is-in .kar-outcome--yes {
+    animation: kar-slide-l 0.9s var(--ease) 3.8s backwards;
+  }
+  .kar-flow__replay span {
+    transition: rotate 0.6s var(--ease);
+  }
+  .kar-flow__replay:hover span {
+    rotate: -360deg;
+  }
+
+  /* -- Screens ---------------------------------------------------------------------------- */
+  .kar-tilt {
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.4s var(--ease), translate 0.45s var(--ease), filter 0.45s var(--ease);
+  }
+  @media (hover: hover) {
+    .kar-phone:hover {
+      translate: 0 -8px;
+      filter: drop-shadow(0 26px 24px rgb(50 6 66 / 0.3));
+    }
+    .kar-strip__phone {
+      transition: translate 0.45s var(--ease), filter 0.45s var(--ease);
+    }
+    .kar-strip__phone:hover {
+      translate: 0 -10px !important;
+      filter: drop-shadow(0 22px 22px rgb(50 6 66 / 0.28));
+    }
+  }
+  .kar-phone:active {
+    translate: 0 -2px;
+  }
+
+  /* Brand banner */
+  .kar-banner__panel::before {
+    content: '';
+    position: absolute;
+    inset: -30%;
+    background: radial-gradient(circle at 72% 62%, rgb(204 150 226 / 0.34), transparent 46%);
+    animation: kar-drift 12s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  .kar-banner__phone--d {
+    translate: 0 calc(var(--ps, 0) * -26px);
+  }
+  .kar-banner__phone--m {
+    animation: kar-bob 7s ease-in-out infinite;
+  }
+  .js .kar-banner.reveal .kar-banner__copy > * {
+    opacity: 0;
+    translate: 0 16px;
+    transition: opacity 0.7s var(--ease), translate 0.8s var(--ease);
+  }
+  .js .kar-banner.is-visible .kar-banner__copy > * {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .js .kar-banner.is-visible .kar-banner__copy > :nth-child(2) {
+    transition-delay: 0.15s;
+  }
+  .js .kar-banner.is-visible .kar-banner__copy > :nth-child(3),
+  .js .kar-banner.is-visible .kar-banner__copy > :nth-child(4) {
+    transition-delay: 0.3s;
+  }
+  .js .kar-banner.is-visible .kar-banner__copy > :nth-child(5) {
+    transition-delay: 0.45s;
+  }
+
+  /* Four-screen strip: phones slide up one after another */
+  .js .kar-strip.reveal .kar-strip__phone {
+    opacity: 0;
+    translate: 0 46px;
+    transition: opacity 0.8s var(--ease), translate 0.9s var(--ease), filter 0.45s var(--ease);
+    transition-delay: calc(var(--i, 0) * 0.12s + 0.1s), calc(var(--i, 0) * 0.12s + 0.1s), 0s;
+  }
+  .js .kar-strip.reveal.is-visible .kar-strip__phone {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* Lilac blocks behind annotated phones wipe in */
+  .js .kar-annot--onboarding .kar-annot__phone::before,
+  .js .kar-annot--home .kar-annot__phone::before,
+  .js .kar-annot--filters .kar-annot__phone::before {
+    scale: 0 1;
+    transition: scale 1s var(--ease) 0.2s;
+  }
+  .js .kar-annot--onboarding .kar-annot__phone::before {
+    transform-origin: 100% 50%;
+  }
+  .js .kar-annot--home .kar-annot__phone::before,
+  .js .kar-annot--filters .kar-annot__phone::before {
+    transform-origin: 0 50%;
+  }
+  @media (min-width: 1100px) {
+    .js .kar-annot--home .kar-annot__phone::before {
+      transform-origin: 100% 50%;
+    }
+  }
+  .js .kar-annot__phone.is-visible::before {
+    scale: 1 1;
+  }
+  .kar-annot__topo img {
+    translate: 0 calc(var(--ps, 0) * 0px);
+  }
+
+  /* Learnings */
+  .js .kar-learn__portrait.reveal figcaption {
+    translate: 0 100%;
+    transition: translate 0.9s var(--ease) 0.35s;
+  }
+  .js .kar-learn__portrait.reveal.is-visible figcaption {
+    translate: 0 0;
+  }
+
+  /* Section navigator */
+  .kar-nav {
+    translate: 0 16px;
+    transition: opacity 0.35s var(--ease), translate 0.45s var(--ease), visibility 0s linear 0.35s;
+  }
+  .kar-nav.is-shown,
+  .kar-nav.is-open {
+    translate: 0 0;
+    transition-delay: 0s;
+  }
+  .kar-nav__list:not([hidden]) {
+    animation: kar-menu 0.32s var(--ease) backwards;
+  }
+  .kar-nav__ring-fg {
+    transition: stroke-dashoffset 0.15s linear;
+  }
+  @media (hover: hover) {
+    .kar-nav__btn {
+      transition: box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+    }
+    .kar-nav__btn:hover {
+      border-color: var(--kp);
+      box-shadow: 0 14px 34px -10px rgb(50 6 66 / 0.55);
+    }
+  }
+}
+
+/* ---- Keyframes (only referenced inside the no-preference block) ---------------------- */
+@keyframes kar-rise {
+  from {
+    opacity: 0;
+    translate: 0 0.5em;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    filter: blur(0);
+  }
+}
+@keyframes kar-kenburns {
+  from {
+    scale: 1.26;
+    opacity: 0.4;
+  }
+  to {
+    scale: 1.12;
+    opacity: 1;
+  }
+}
+@keyframes kar-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes kar-glint {
+  0%,
+  72%,
+  100% {
+    filter: brightness(1) drop-shadow(0 0 0 rgb(200 140 230 / 0));
+  }
+  84% {
+    filter: brightness(1.28) drop-shadow(0 0 14px rgb(200 140 230 / 0.6));
+  }
+}
+@keyframes kar-phone-in {
+  from {
+    opacity: 0;
+    transform: translateY(90px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes kar-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+@keyframes kar-ping {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+@keyframes kar-dot {
+  0% {
+    transform: scale(0);
+  }
+  60% {
+    transform: scale(2.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes kar-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(-6%, 8%) scale(1.12);
+  }
+}
+@keyframes kar-step {
+  0% {
+    opacity: 0;
+    translate: 0 14px;
+    background-color: #efe0f6;
+    border-color: var(--kp);
+  }
+  45% {
+    opacity: 1;
+    translate: 0 0;
+    background-color: #efe0f6;
+    border-color: var(--kp);
+  }
+  100% {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes kar-decide {
+  0% {
+    opacity: 0;
+    scale: 0.88;
+  }
+  60% {
+    scale: 1.03;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+@keyframes kar-slide-r {
+  from {
+    opacity: 0;
+    translate: -24px 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes kar-slide-l {
+  from {
+    opacity: 0;
+    translate: 24px 0;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@keyframes kar-menu {
+  from {
+    opacity: 0;
+    scale: 0.92;
+    translate: 0 10px;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    translate: 0 0;
+  }
+}

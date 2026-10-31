@@ -1,0 +1,547 @@
+/* ==========================================================================
+   Homepage — creative layer
+
+   Same rules as the case-study layer: additive only, so the layout stays
+   pinned to the Figma. Colour/shadow changes are for everyone; anything that
+   moves lives in prefers-reduced-motion: no-preference; pointer effects are
+   hover-only. Reuses the keyframes and word-reveal from casestudy-fx.css.
+   ========================================================================== */
+
+/* ---- Reading progress (gold variant of the case-study bar) -------------- */
+.cs-progress--gold .cs-progress__bar {
+  background: linear-gradient(90deg, #e8b24a, #cd8d15 55%, #a06c0e);
+}
+
+/* Purple variant, used by the KAR case study */
+.cs-progress--purple .cs-progress__bar {
+  background: linear-gradient(90deg, #8650a1, #5a0b74 60%, #320642);
+}
+
+/* ---- Header ------------------------------------------------------------- */
+.site-header {
+  transition: box-shadow 0.4s var(--ease), border-color 0.25s var(--ease);
+}
+.site-header.is-scrolled {
+  box-shadow: 0 14px 34px -26px rgb(17 17 17 / 0.45);
+}
+/* The section you're in: Work / Contact stay underlined in gold */
+.primary-nav__link {
+  transition: color 0.3s var(--ease);
+}
+.primary-nav__link.is-active {
+  color: var(--gold-hover);
+}
+.primary-nav__link.is-active::after {
+  background: var(--gold-text);
+  transform: scaleX(1);
+}
+@media (max-width: 767px) {
+  .primary-nav__link.is-active::after {
+    display: none;
+  }
+}
+
+/* ---- Hero --------------------------------------------------------------- */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+}
+/* Soft gold aura behind the headline … */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -6% -4% 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(38% 46% at 82% 30%, rgb(205 141 21 / 0.18), transparent 70%),
+    radial-gradient(30% 34% at 6% 82%, rgb(232 178 74 / 0.14), transparent 72%);
+  -webkit-mask-image: linear-gradient(#000 62%, transparent 98%);
+  mask-image: linear-gradient(#000 62%, transparent 98%);
+}
+/* … and a faint dot grid fading out from the top right */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgb(17 17 17 / 0.09) 1px, transparent 1.3px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(48% 62% at 88% 18%, #000, transparent 78%);
+  mask-image: radial-gradient(48% 62% at 88% 18%, #000, transparent 78%);
+}
+
+/* Hand-drawn gold swash under the last word of a headline */
+.swash {
+  position: relative;
+  display: inline-block;
+}
+.swash::after {
+  content: '';
+  position: absolute;
+  left: -1%;
+  right: -1%;
+  bottom: -0.04em;
+  height: 0.2em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 20' preserveAspectRatio='none'%3E%3Cpath d='M3 13 C 55 3, 100 17, 155 8 S 255 6, 297 12' fill='none' stroke='%23cd8d15' stroke-width='3.4' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat 0 0 / 100% 100%;
+  pointer-events: none;
+}
+
+/* "Dive In" */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.3) 50%, transparent 70%);
+  translate: -120% 0;
+  pointer-events: none;
+}
+
+/* Word hover (gold ↔ ink swap) */
+@media (hover: hover) {
+  .hero__title .sw__w,
+  .contact__title .sw__w {
+    transition: translate 0.35s var(--ease), color 0.3s var(--ease);
+  }
+  .hero__title .sw__w:hover,
+  .contact__title .sw__w:hover {
+    translate: 0 -0.05em;
+    color: var(--gold-text);
+  }
+  .hero__title .accent .sw__w:hover,
+  .contact__title .accent .sw__w:hover {
+    color: var(--ink);
+  }
+}
+
+/* Tagline: words light up as it scrolls into the middle of the screen */
+@media (prefers-reduced-motion: no-preference) {
+  .js .work-intro .sx {
+    color: #cfcfc9;
+  }
+  .js .work-intro .sx.on {
+    color: inherit;
+  }
+}
+
+/* ---- Projects ----------------------------------------------------------- */
+.projects {
+  counter-reset: p;
+}
+.project {
+  position: relative;
+  isolation: isolate;
+  counter-increment: p;
+}
+.project__inner {
+  position: relative;
+}
+/* Ink rule that draws across the grey one (see motion block) */
+.project__inner::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ink);
+  opacity: 0;
+  transform-origin: left;
+  pointer-events: none;
+}
+.project__num,
+.project__category {
+  transition: color 0.35s var(--ease);
+}
+
+/* Outlined ghost numeral in the empty half of each project header */
+@media (min-width: 900px) {
+  .project__inner::after {
+    content: counter(p, decimal-leading-zero);
+    content: counter(p, decimal-leading-zero) / '';
+    position: absolute;
+    z-index: -1;
+    top: clamp(4.25rem, 7vw, 6.25rem);
+    right: 4%;
+    font-size: clamp(9rem, 17vw, 15rem);
+    line-height: 0.8;
+    font-weight: 500;
+    letter-spacing: -0.07em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgb(188 130 22 / 0.3);
+    translate: 0 calc(var(--ps, 0) * -34px);
+    transition: color 0.6s var(--ease), -webkit-text-stroke-color 0.6s var(--ease);
+    pointer-events: none;
+  }
+  .project--right .project__inner::after {
+    right: auto;
+    left: 2%;
+  }
+}
+@media (hover: hover) and (min-width: 900px) {
+  .project:hover .project__inner::after {
+    color: rgb(205 141 21 / 0.07);
+    -webkit-text-stroke-color: rgb(188 130 22 / 0.5);
+  }
+}
+
+/* Tags */
+.tags__item {
+  transition: border-color 0.3s var(--ease), color 0.3s var(--ease), background-color 0.3s var(--ease),
+    translate 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .tags__item:hover {
+    border-color: var(--gold);
+    color: var(--gold-hover);
+    background: rgb(205 141 21 / 0.07);
+    translate: 0 -2px;
+  }
+}
+
+/* Media panel: "View" chip that follows the cursor + a sheen sweep */
+.project__media {
+  position: relative;
+  isolation: isolate;
+}
+.project__media::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.28) 50%, transparent 65%);
+  translate: -110% 0;
+  pointer-events: none;
+}
+.project__media::after {
+  content: 'View \2197';
+  content: 'View \2197' / '';
+  position: absolute;
+  z-index: 2;
+  left: var(--mx, 50%);
+  top: var(--my, 50%);
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  margin: -48px 0 0 -48px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 14px 30px -12px rgb(160 108 14 / 0.7);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  scale: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: left 0.14s ease-out, top 0.14s ease-out, scale 0.4s var(--ease), opacity 0.25s var(--ease);
+}
+@media (hover: hover) {
+  .project__media.is-tracking {
+    cursor: none;
+  }
+  .project__media.is-tracking::after {
+    scale: 1;
+    opacity: 1;
+  }
+  /* Hovering the artwork lights up its number and title */
+  .project:has(.project__media:hover) .project__num {
+    color: var(--gold);
+  }
+  .project:has(.project__media:hover) .project__title .sw__w {
+    color: var(--gold-text);
+  }
+}
+.project__title .sw__w {
+  transition: color 0.4s var(--ease);
+}
+
+/* ---- Contact ------------------------------------------------------------ */
+.contact {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+}
+.contact__orbit {
+  position: absolute;
+  z-index: -1;
+  top: -6%;
+  right: clamp(-22rem, -17vw, -9rem);
+  width: clamp(22rem, 52vw, 48rem);
+  aspect-ratio: 1;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(#000 55%, transparent 96%);
+  mask-image: linear-gradient(#000 55%, transparent 96%);
+}
+.orbit__ring {
+  position: absolute;
+  inset: calc(var(--n) * 11%);
+  border: 1px solid rgb(17 17 17 / 0.09);
+  border-radius: 50%;
+  rotate: calc(var(--n) * 72deg);
+}
+.orbit__ring i {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 16%, transparent);
+}
+
+.contact__row {
+  position: relative;
+  isolation: isolate;
+}
+.contact__row::before {
+  content: '';
+  position: absolute;
+  inset: 0 -12px;
+  z-index: -1;
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgb(205 141 21 / 0.1), rgb(205 141 21 / 0));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.55s var(--ease);
+  pointer-events: none;
+}
+.contact__row dt {
+  transition: color 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .contact__row:hover::before {
+    transform: scaleX(1);
+  }
+  .contact__row:hover dt {
+    color: var(--gold-hover);
+  }
+}
+
+/* ---- Footer ------------------------------------------------------------- */
+.site-footer__logo {
+  transition: translate 0.5s var(--ease), opacity 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .site-footer__logo:hover {
+    translate: 6px 0;
+  }
+}
+
+/* ==========================================================================
+   Motion
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes hero-word {
+    from {
+      opacity: 0;
+      translate: 0 0.45em;
+      filter: blur(8px);
+    }
+  }
+  @keyframes rule-draw {
+    0% {
+      transform: scaleX(0);
+      opacity: 1;
+    }
+    55% {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scaleX(1);
+      opacity: 0;
+    }
+  }
+  @keyframes aura {
+    0%,
+    100% {
+      scale: 1;
+    }
+    50% {
+      scale: 1.07;
+    }
+  }
+  @keyframes dive {
+    0%,
+    65%,
+    100% {
+      translate: 0 0;
+    }
+    82% {
+      translate: 2px 3px;
+    }
+  }
+  @keyframes orbit-spin {
+    from {
+      rotate: calc(var(--n) * 72deg);
+    }
+    to {
+      rotate: calc(var(--n) * 72deg + 360deg);
+    }
+  }
+
+  /* -- Hero: words rise in one by one, aura follows the cursor and drifts on scroll -- */
+  .hero__title .line {
+    animation: none;
+  }
+  .hero__title .sw__w {
+    display: inline-block;
+    animation: hero-word 1s var(--ease) backwards;
+    animation-delay: calc(0.08s + var(--i, 0) * 0.075s);
+  }
+  .hero__title .swash::after {
+    animation: cs-wipe-x 0.9s var(--ease) 1.45s backwards;
+  }
+  .hero__cta {
+    animation-delay: 1.15s;
+  }
+  .hero::before {
+    translate: calc(var(--hx, 0) * -26px) calc(var(--hy, 0) * -18px + var(--hs, 0) * 70px);
+    transition: translate 1.1s var(--ease);
+    animation: aura 14s ease-in-out infinite;
+  }
+  .hero::after {
+    translate: calc(var(--hx, 0) * 10px) calc(var(--hs, 0) * 40px);
+    transition: translate 1.1s var(--ease);
+  }
+  .hero__title {
+    translate: 0 calc(var(--hs, 0) * -26px);
+  }
+  .hero__lede {
+    translate: 0 calc(var(--hs, 0) * -12px);
+  }
+  .hero__cta {
+    translate: 0 calc(var(--hs, 0) * 16px);
+  }
+
+  .hero__cta .btn {
+    translate: var(--bx, 0px) var(--by, 0px);
+    transition: translate 0.35s var(--ease), background-color 0.25s var(--ease), transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease);
+  }
+  .btn:hover::after {
+    translate: 120% 0;
+    transition: translate 0.8s var(--ease);
+  }
+  .hero__cta .btn__icon:not(.btn__icon--out) {
+    animation: dive 3.4s ease-in-out 2.6s infinite;
+  }
+  .avail__dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #2f9e5b;
+    animation: avail-ping 2.6s ease-out infinite;
+  }
+  @keyframes avail-ping {
+    0% {
+      transform: scale(1);
+      opacity: 0.55;
+    }
+    70%,
+    100% {
+      transform: scale(2.8);
+      opacity: 0;
+    }
+  }
+
+  /* -- Projects -- */
+  .project.is-in .project__inner::before {
+    animation: rule-draw 1.9s var(--ease) both;
+  }
+  .project.is-in .project__meta {
+    animation: cs-in 0.8s var(--ease) 0.1s backwards;
+  }
+  .project__body.is-visible .project__desc {
+    animation: cs-in 0.8s var(--ease) 0.3s backwards;
+  }
+  .project__body.is-visible .tags__item {
+    animation: cs-in 0.6s var(--ease) backwards;
+  }
+  .project__body.is-visible .tags__item:nth-child(1) {
+    animation-delay: 0.45s;
+  }
+  .project__body.is-visible .tags__item:nth-child(2) {
+    animation-delay: 0.52s;
+  }
+  .project__body.is-visible .tags__item:nth-child(3) {
+    animation-delay: 0.59s;
+  }
+  .project__body.is-visible .tags__item:nth-child(4) {
+    animation-delay: 0.66s;
+  }
+  .project__body.is-visible .text-link {
+    animation: cs-in 0.7s var(--ease) 0.75s backwards;
+  }
+
+  /* Artwork opens like a curtain, then settles from a slight zoom */
+  .js .project__media {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 1.4s var(--ease);
+  }
+  .js .project__media-wrap.is-visible .project__media {
+    clip-path: inset(0 0 0 0);
+  }
+  .js .project__media img {
+    scale: 1.12;
+    transform: none;
+    transition: scale 1.8s var(--ease), translate 0.6s var(--ease);
+  }
+  .js .project__media-wrap.is-visible .project__media img {
+    scale: 1;
+  }
+  @media (hover: hover) {
+    .js .project__media-wrap.is-visible .project__media:hover img {
+      scale: 1.035;
+      translate: calc(var(--px, 0) * -9px) calc(var(--py, 0) * -6px);
+      transition: scale 0.9s var(--ease), translate 0.5s var(--ease);
+    }
+    .project__media:hover::before {
+      translate: 110% 0;
+      transition: translate 1.1s var(--ease);
+    }
+  }
+
+  /* -- Contact -- */
+  .js .contact .swash::after {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 1s var(--ease) 1s;
+  }
+  .js .contact__heading.is-visible .swash::after {
+    clip-path: inset(0 0 0 0);
+  }
+  .contact__details.is-visible .contact__lede {
+    animation: cs-in 0.8s var(--ease) 0.2s backwards;
+  }
+  .contact__details.is-visible .contact__row:nth-child(1) {
+    animation: cs-in 0.8s var(--ease) 0.35s backwards;
+  }
+  .contact__details.is-visible .contact__row:nth-child(2) {
+    animation: cs-in 0.8s var(--ease) 0.5s backwards;
+  }
+  .orbit__ring {
+    animation: orbit-spin 60s linear infinite;
+    animation-duration: calc(40s + var(--n) * 18s);
+  }
+  .orbit__ring:nth-child(even) {
+    animation-direction: reverse;
+  }
+}
+
+@media (hover: hover) {
+  .avail:hover {
+    border-color: #2f9e5b;
+    box-shadow: 0 6px 16px -10px rgb(47 158 91 / 0.6);
+  }
+}

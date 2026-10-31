@@ -1,0 +1,231 @@
+/* ==========================================================================
+   /work: the project list on its own page (no hero, no introduction line).
+   Spacing follows the Work page design.
+   ========================================================================== */
+
+/* Desktop: the first project starts 55px under the header, with no rule above it */
+.projects--page {
+  padding-top: 29px;
+}
+.projects--page > .project:first-child .project__inner {
+  border-top-color: transparent;
+}
+/* The contact block sits closer to the last project than it does on the homepage */
+.projects--page + .contact {
+  margin-top: calc(clamp(3rem, 10.8vw, 9.4rem) + 1px);
+}
+
+@media (max-width: 767px) {
+  .projects--page {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  .projects--page > .project:first-child .project__meta {
+    padding-top: 21px;
+  }
+  /* More air between the projects than on the homepage */
+  .projects--page .project + .project {
+    margin-top: 44px;
+  }
+  .projects--page .project[data-media='bleed'] + .project {
+    margin-top: 55px;
+  }
+  /* The design leaves a little more room under each rule than the homepage does */
+  .projects--page > .project:nth-child(2) .project__meta {
+    padding-top: 35px;
+  }
+  .projects--page > .project:nth-child(3) .project__meta {
+    padding-top: 28px;
+  }
+  .projects--page + .contact {
+    margin-top: clamp(5rem, 27.9vw, 7.5rem);
+  }
+
+  /* No category line on the projects the design leaves it off */
+  .project--quiet-m .project__category,
+  .project--quiet-m .project__category--inline,
+  .project--quiet-m[data-meta='beside'] .project__category--inline {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Project navigator (floating), in the gold of the homepage
+   ========================================================================== */
+.work-nav {
+  position: fixed;
+  z-index: 40;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.work-nav.is-shown,
+.work-nav.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.work-nav__btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 28px);
+  min-height: 48px;
+  padding: 6px 16px 6px 6px;
+  border: 1px solid rgb(188 130 22 / 0.35);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.94);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 10px 30px -10px rgb(60 40 5 / 0.35);
+}
+.work-nav__ring {
+  position: absolute;
+  left: 6px;
+  top: 6px;
+  width: 34px;
+  height: 34px;
+  rotate: -90deg;
+}
+.work-nav__ring circle {
+  fill: none;
+  stroke-width: 3;
+}
+.work-nav__ring-bg {
+  stroke: #f0e3c8;
+}
+.work-nav__ring-fg {
+  stroke: var(--gold);
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--p, 0));
+}
+.work-nav__count {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  font-size: 11.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold-ink);
+}
+.work-nav__label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 190px;
+}
+.work-nav__chev {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  margin: 0 2px 2px 2px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  rotate: 225deg;
+  transition: rotate 0.3s var(--ease);
+}
+.work-nav.is-open .work-nav__chev {
+  rotate: 45deg;
+  margin-bottom: 4px;
+}
+.work-nav__list {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 10px);
+  width: min(300px, calc(100vw - 28px));
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+  border: 1px solid rgb(188 130 22 / 0.25);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.98);
+  box-shadow: 0 24px 60px -20px rgb(60 40 5 / 0.4);
+  transform-origin: 100% 100%;
+}
+.work-nav__list[hidden] {
+  display: none;
+}
+.work-nav__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  color: var(--ink);
+  font-size: 14.5px;
+  text-decoration: none;
+}
+.work-nav__item:hover,
+.work-nav__item:focus-visible {
+  background: #faf3e4;
+  outline: none;
+}
+.work-nav__item.is-current {
+  color: var(--gold);
+  font-weight: 600;
+}
+.work-nav__num {
+  flex: none;
+  width: 22px;
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold-ink);
+}
+.work-nav__top {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--rule);
+}
+.work-nav__top .work-nav__item {
+  color: var(--text-muted);
+}
+.work-nav :focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .work-nav {
+    translate: 0 16px;
+    transition: opacity 0.35s var(--ease), translate 0.45s var(--ease), visibility 0s linear 0.35s;
+  }
+  .work-nav.is-shown,
+  .work-nav.is-open {
+    translate: 0 0;
+    transition-delay: 0s;
+  }
+  .work-nav__list:not([hidden]) {
+    animation: work-menu 0.32s var(--ease) backwards;
+  }
+  .work-nav__ring-fg {
+    transition: stroke-dashoffset 0.15s linear;
+  }
+  @media (hover: hover) {
+    .work-nav__btn {
+      transition: box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+    }
+    .work-nav__btn:hover {
+      border-color: var(--gold);
+      box-shadow: 0 14px 34px -10px rgb(60 40 5 / 0.45);
+    }
+  }
+}
+@keyframes work-menu {
+  from {
+    opacity: 0;
+    scale: 0.96;
+    translate: 0 8px;
+  }
+}

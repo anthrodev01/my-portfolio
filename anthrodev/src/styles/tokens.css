@@ -1,0 +1,44 @@
+:root {
+  /* Colour — sampled from the Figma export */
+  --ink: #111111;
+  --gold: #a06c0e; /* buttons, fills (white text on it passes AA) */
+  --gold-ink: #94650b; /* small gold text on white (>= 5:1) */
+  --gold-text: #c4850f; /* accent words in large headings (>= 3:1) */
+  --gold-hover: #86580a;
+  --text-muted: #666661;
+  --text-soft: #464343;
+  --text-pill: #73736e;
+  --rule: #b3b3b3;
+  --hairline: #dededa;
+  --panel: #e7e6e1;
+  --bg: #ffffff;
+
+  /* Type */
+  --font: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+
+  /* Fluid type scale. Each value equals the Figma size at the 1390px artboard
+     and scales down proportionally; the first number is the small-screen floor. */
+  --fs-hero: clamp(2.75rem, 6.33vw, 5.5rem); /* 88px */
+  --fs-contact: clamp(3rem, 8.06vw, 7rem); /* 112px */
+  --fs-title: clamp(2.75rem, 5.18vw, 4.5rem); /* 72px */
+  --fs-tagline: clamp(1.5rem, 2.88vw, 2.5rem); /* 40px */
+  --fs-lede: clamp(1.125rem, 1.727vw, 1.5rem); /* 24px */
+  --fs-contact-lede: clamp(1rem, 1.44vw, 1.25rem); /* 20px */
+
+  /* Layout */
+  --gutter: clamp(1rem, 3.1vw, 2.6875rem); /* 43px at 1390 */
+  --max: 1390px;
+  --header-h: 89px;
+  --anchor-offset: 89px; /* where in-page anchors land, below the sticky header */
+  --radius-panel: 12px;
+  --ease: cubic-bezier(0.22, 0.7, 0.2, 1);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --header-h: 103px; /* tall at the top of the page, as in the mobile design */
+    --anchor-offset: 68px; /* compact height once scrolled */
+    --gutter: 24px;
+  }
+}

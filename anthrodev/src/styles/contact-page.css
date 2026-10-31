@@ -1,0 +1,742 @@
+/* ==========================================================================
+   Contact (/contact) — layout
+   Sizes are in the design's own pixels (the `u` suffix, converted to
+   calc(N * var(--s)) by a build step), scaled by one variable:
+     phone   (< 700)    --s = 100vw / 390
+     tablet  (700–1099) --s = 100vw / 500, 1.4–1.8 (the phone design, opened up)
+     desktop (≥ 1100)   --s = 100vw / 1512, max 1 (the 1512px desktop design)
+   Motion lives in contact-fx.css.
+   ========================================================================== */
+
+.ctp {
+  --s: clamp(0.72px, calc(100vw / 390), 1.4px);
+  --ct-ink: #20211e;
+  --ct-gold: #c4850f;
+  --ct-gold-ink: #94650b;
+  --ct-olive: #687a5d;
+  --ct-body: #65665f;
+  --ct-soft: #8a8b84;
+  --ct-hair: #e4e2db;
+  --ct-field: #f6f5f1;
+  --ct-field-line: #d8d6cf;
+  --font-hand: 'Kalam', 'Caveat', 'Segoe Print', 'Bradley Hand', 'Chalkboard SE', 'Comic Sans MS', cursive;
+
+  position: relative;
+  background: #fff;
+  color: var(--ct-ink);
+  font-family: var(--font);
+  overflow-x: clip;
+}
+@media (min-width: 700px) {
+  .ctp {
+    --s: clamp(1.4px, calc(100vw / 500), 1.8px);
+  }
+}
+@media (min-width: 1100px) {
+  .ctp {
+    --s: min(1px, calc(100vw / 1512));
+  }
+}
+
+.ctp :where(h1, h2, h3, p, ol, ul, dl, dd) {
+  margin: 0;
+}
+.ctp :where(button, input, select, textarea) {
+  font: inherit;
+  color: inherit;
+}
+
+.ct-stage {
+  position: relative;
+  width: calc(390 * var(--s));
+  margin-inline: auto;
+}
+@media (min-width: 1100px) {
+  .ct-stage {
+    width: calc(1512 * var(--s));
+  }
+}
+
+.ct-label {
+  font-size: calc(10.5 * var(--s));
+  line-height: calc(14 * var(--s));
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ct-olive);
+}
+.ct-rule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ct-ink);
+  pointer-events: none;
+}
+
+/* ---- Intro -------------------------------------------------------------- */
+
+.ct-hero {
+  position: relative;
+  padding: calc(36 * var(--s)) calc(24 * var(--s)) 0;
+}
+.ct-title {
+  margin-top: calc(29 * var(--s));
+  width: calc(362 * var(--s));
+  font-size: calc(31.5 * var(--s));
+  line-height: calc(38 * var(--s));
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  color: var(--ct-ink);
+}
+.ct-title__talk {
+  position: relative;
+  display: inline-block;
+  margin-left: calc(4 * var(--s));
+  color: var(--ct-olive);
+}
+.ct-underline {
+  position: absolute;
+  left: calc(8 * var(--s));
+  right: calc(-1 * var(--s));
+  top: 100%;
+  width: calc(100% - 7 * var(--s));
+  height: calc(12 * var(--s));
+  margin-top: 0;
+  overflow: visible;
+  color: #5a575c;
+}
+.ct-spark {
+  position: absolute;
+  color: #d29a4a;
+}
+.ct-spark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ct-spark--hero {
+  display: none;
+}
+.ct-hero__lede {
+  margin-top: calc(33 * var(--s));
+  width: calc(342 * var(--s));
+  font-size: calc(15 * var(--s));
+  line-height: calc(23 * var(--s));
+  color: var(--ct-body);
+}
+.ct-br {
+  display: block;
+}
+.ct-br-d {
+  display: none;
+}
+
+/* ---- Form card and direct details -------------------------------------- */
+
+.ct-main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: calc(31 * var(--s)) calc(24 * var(--s)) 0;
+}
+.ct-card {
+  position: relative;
+  padding: calc(27 * var(--s)) calc(19 * var(--s)) calc(43 * var(--s));
+  border: 1px solid var(--ct-hair);
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(32 33 30 / 0.04);
+}
+.ct-card__title {
+  margin-top: calc(19 * var(--s));
+  font-size: calc(33.2 * var(--s));
+  line-height: calc(36 * var(--s));
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.ct-form {
+  position: relative;
+  margin-top: calc(16 * var(--s));
+  padding-top: calc(33 * var(--s));
+  border-top: 1px solid var(--ct-hair);
+}
+.ct-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.ct-field {
+  margin-bottom: calc(22 * var(--s));
+}
+.ct-label,
+.ct-field .ct-label {
+  display: block;
+}
+.ct-field .ct-label {
+  margin-bottom: calc(9 * var(--s));
+  font-size: calc(13 * var(--s));
+  line-height: calc(16 * var(--s));
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ct-ink);
+}
+.ct-input {
+  display: block;
+  width: 100%;
+  height: calc(50 * var(--s));
+  padding: 0 calc(15 * var(--s));
+  border: 1px solid var(--ct-field-line);
+  border-radius: calc(8 * var(--s));
+  background: var(--ct-field);
+  font-size: calc(14 * var(--s));
+  line-height: calc(20 * var(--s));
+  color: var(--ct-ink);
+  appearance: none;
+  -webkit-appearance: none;
+}
+.ct-input::placeholder {
+  color: #9c9c95;
+  opacity: 1;
+  font-size: calc(13 * var(--s));
+}
+.ct-input--area {
+  height: calc(145 * var(--s));
+  padding-top: calc(15 * var(--s));
+  padding-right: calc(10 * var(--s));
+  resize: none;
+}
+.ct-select {
+  position: relative;
+}
+.ct-select .ct-input {
+  padding-right: calc(44 * var(--s));
+  font-size: calc(13 * var(--s));
+  cursor: pointer;
+}
+.ct-select__chev {
+  position: absolute;
+  right: calc(16 * var(--s));
+  top: 50%;
+  translate: 0 -50%;
+  width: calc(16 * var(--s));
+  height: calc(16 * var(--s));
+  pointer-events: none;
+}
+.ct-error {
+  margin-top: calc(6 * var(--s));
+  font-size: calc(12 * var(--s));
+  line-height: calc(16 * var(--s));
+  color: #a4401c;
+}
+.ct-input[aria-invalid='true'] {
+  border-color: #c4623a;
+}
+.ct-send {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: calc(54 * var(--s));
+  margin-top: calc(32 * var(--s));
+  padding: 0 calc(21 * var(--s)) 0 calc(19 * var(--s));
+  border: 0;
+  border-radius: calc(6 * var(--s));
+  background: var(--ct-gold);
+  color: #fff;
+  font-size: calc(15 * var(--s));
+  cursor: pointer;
+}
+.ct-send__arrow {
+  width: calc(7 * var(--s));
+  height: calc(7 * var(--s));
+}
+.ct-send:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+.ct-fail {
+  margin-top: calc(16 * var(--s));
+  font-size: calc(13 * var(--s));
+  line-height: calc(19 * var(--s));
+  color: #a4401c;
+}
+.ct-fail a {
+  color: inherit;
+  text-underline-offset: 2px;
+}
+
+.ct-sent {
+  padding-top: calc(40 * var(--s));
+  text-align: left;
+}
+.ct-sent__tick {
+  display: grid;
+  place-items: center;
+  width: calc(38 * var(--s));
+  height: calc(38 * var(--s));
+  border-radius: 50%;
+  background: #dce5d4;
+  color: var(--ct-olive);
+}
+.ct-sent__title {
+  margin-top: calc(20 * var(--s));
+  font-size: calc(28 * var(--s));
+  line-height: calc(32 * var(--s));
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+.ct-sent__text {
+  margin-top: calc(10 * var(--s));
+  font-size: calc(15 * var(--s));
+  line-height: calc(23 * var(--s));
+  color: var(--ct-body);
+}
+.ct-sent__again {
+  margin-top: calc(24 * var(--s));
+  padding: 0 0 2px;
+  border: 0;
+  border-bottom: 1px solid var(--ct-gold);
+  background: none;
+  color: var(--ct-gold-ink);
+  font-size: calc(14 * var(--s));
+  cursor: pointer;
+}
+
+.ct-direct {
+  position: relative;
+  margin: calc(41 * var(--s)) 0 0;
+}
+.ct-direct__title {
+  margin-top: calc(18 * var(--s));
+  font-size: calc(30 * var(--s));
+  line-height: calc(36 * var(--s));
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.ct-direct__text {
+  margin-top: calc(19 * var(--s));
+  font-size: calc(15 * var(--s));
+  line-height: calc(22 * var(--s));
+  color: var(--ct-body);
+}
+.ct-rows {
+  position: relative;
+  margin-top: calc(17 * var(--s));
+  padding-top: calc(34 * var(--s));
+}
+.ct-note {
+  position: absolute;
+  right: calc(-5 * var(--s));
+  top: 0;
+  font-family: var(--font-hand);
+  font-size: calc(11 * var(--s));
+  line-height: calc(14 * var(--s));
+  color: var(--ct-olive);
+  white-space: nowrap;
+}
+.ct-squiggle {
+  position: absolute;
+  color: var(--ct-olive);
+}
+.ct-squiggle svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ct-squiggle--mail {
+  right: calc(28 * var(--s));
+  top: calc(69 * var(--s));
+  width: calc(39 * var(--s));
+  height: calc(17 * var(--s));
+}
+.ct-row--email {
+  position: relative;
+  padding-top: calc(25 * var(--s));
+  padding-bottom: calc(26 * var(--s));
+  border-top: 1px solid var(--ct-hair);
+  border-bottom: 1px solid var(--ct-hair);
+}
+.ct-micro {
+  font-size: calc(10 * var(--s));
+  line-height: calc(12 * var(--s));
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ct-body);
+}
+.ct-email {
+  display: block;
+  width: fit-content;
+  margin-top: calc(18 * var(--s));
+  font-size: calc(25 * var(--s));
+  line-height: calc(30 * var(--s));
+  letter-spacing: -0.02em;
+  color: var(--ct-ink);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.ct-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(6 * var(--s));
+  height: calc(40 * var(--s));
+  margin-top: calc(8 * var(--s));
+  padding: 0 calc(14 * var(--s));
+  border: 1px solid var(--ct-field-line);
+  border-radius: 999px;
+  background: #fff;
+  font-size: calc(13.5 * var(--s));
+  color: var(--ct-body);
+  cursor: pointer;
+}
+.ct-copy__icon {
+  display: none;
+}
+.ct-gap {
+  display: none;
+}
+.ct-row--link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(12 * var(--s));
+  padding: calc(16 * var(--s)) 0 0;
+}
+.ct-link-label {
+  font-size: calc(14 * var(--s));
+  line-height: calc(18 * var(--s));
+  font-weight: 500;
+}
+.ct-link {
+  font-size: calc(12 * var(--s));
+  line-height: calc(14 * var(--s));
+  color: var(--ct-body);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.ct-quote {
+  margin: calc(17 * var(--s)) calc(-9 * var(--s)) 0;
+  padding: calc(18 * var(--s)) calc(8 * var(--s)) calc(16 * var(--s)) calc(13 * var(--s));
+  border-left: 2px solid var(--ct-olive);
+  background: #dce5d4;
+  font-size: calc(15 * var(--s));
+  line-height: calc(23 * var(--s));
+  color: #4c5a45;
+}
+
+/* ---- Closing line ------------------------------------------------------- */
+
+.ct-last {
+  position: relative;
+  margin-top: calc(4 * var(--s));
+  padding: calc(36 * var(--s)) calc(26 * var(--s)) calc(39 * var(--s));
+}
+.ct-last .ct-rule {
+  display: none;
+}
+.ct-last__title {
+  margin-top: calc(20 * var(--s));
+  font-size: calc(28.3 * var(--s));
+  line-height: calc(41.5 * var(--s));
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.ct-last__link-wrap {
+  margin-top: calc(32 * var(--s));
+}
+.ct-back {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: calc(37 * var(--s));
+  font-size: calc(15 * var(--s));
+  line-height: calc(18 * var(--s));
+  color: var(--ct-gold-ink);
+  text-decoration: none;
+}
+.ct-back span {
+  padding-bottom: calc(4 * var(--s));
+  border-bottom: 1px solid var(--ct-gold);
+}
+.ct-back svg {
+  width: calc(11 * var(--s));
+  height: calc(11 * var(--s));
+  margin-bottom: calc(9 * var(--s));
+}
+
+/* ==========================================================================
+   Desktop (1512px artboard). Positions are in page pixels minus the 90px header.
+   ========================================================================== */
+@media (min-width: 1100px) {
+  .ct-label {
+    font-size: calc(10 * var(--s));
+    letter-spacing: 0.062em;
+  }
+
+  .ct-hero {
+    height: calc(686 * var(--s));
+    margin-inline: calc(156 * var(--s));
+    padding: 0;
+  }
+  .ct-hero .ct-rule,
+  .ct-last .ct-rule {
+    display: block;
+  }
+  .ct-hero .ct-rule {
+    top: auto;
+    bottom: 0;
+  }
+  .ct-hero__eyebrow {
+    position: absolute;
+    left: calc(12 * var(--s));
+    top: calc(91 * var(--s));
+  }
+  .ct-title__talk {
+    margin-left: 0;
+  }
+  .ct-title {
+    position: absolute;
+    left: calc(12 * var(--s));
+    top: calc(204 * var(--s));
+    width: calc(640 * var(--s));
+    margin: 0;
+    font-size: calc(112 * var(--s));
+    line-height: calc(101 * var(--s));
+    letter-spacing: -0.069em;
+  }
+  .ct-br {
+    display: none;
+  }
+  .ct-br-d {
+    display: block;
+  }
+  .ct-underline {
+    left: calc(3 * var(--s));
+    right: auto;
+    width: calc(418 * var(--s));
+    height: calc(12 * var(--s));
+    margin-top: calc(20 * var(--s));
+    color: var(--ct-olive);
+  }
+  .ct-underline__b {
+    display: none;
+  }
+  .ct-spark--hero {
+    display: block;
+    left: calc(816 * var(--s));
+    top: calc(289 * var(--s));
+    width: calc(22 * var(--s));
+    height: calc(22 * var(--s));
+  }
+  .ct-hero__lede {
+    position: absolute;
+    left: calc(844 * var(--s));
+    top: calc(478 * var(--s));
+    width: calc(360 * var(--s));
+    margin: 0;
+    font-size: calc(14 * var(--s));
+    line-height: calc(23 * var(--s));
+  }
+
+  .ct-main {
+    display: block;
+    height: calc(1008 * var(--s));
+    margin-inline: calc(156 * var(--s));
+    padding: 0;
+  }
+  .ct-card {
+    position: absolute;
+    left: calc(616 * var(--s));
+    top: calc(126 * var(--s));
+    width: calc(584 * var(--s));
+    height: calc(822 * var(--s));
+    padding: calc(45 * var(--s)) calc(39 * var(--s)) 0;
+  }
+  .ct-card__title {
+    margin-top: calc(25 * var(--s));
+    font-size: calc(33.3 * var(--s));
+    line-height: calc(42 * var(--s));
+  }
+  .ct-form {
+    margin-top: calc(31 * var(--s));
+    padding-top: calc(34 * var(--s));
+  }
+  .ct-field {
+    margin-bottom: calc(23 * var(--s));
+  }
+  .ct-field .ct-label {
+    margin-bottom: calc(9 * var(--s));
+    padding-top: calc(2 * var(--s));
+    font-size: calc(9.3 * var(--s));
+    line-height: calc(13 * var(--s));
+    font-weight: 600;
+  }
+  .ct-input {
+    font-size: calc(12 * var(--s));
+    padding-inline: calc(15 * var(--s));
+  }
+  .ct-input::placeholder {
+    font-size: calc(11.2 * var(--s));
+  }
+  .ct-select .ct-input {
+    padding-right: calc(44 * var(--s));
+  }
+  .ct-input--area {
+    height: calc(145 * var(--s));
+  }
+  .ct-send {
+    font-size: calc(10 * var(--s));
+  }
+  .ct-error {
+    font-size: calc(11 * var(--s));
+  }
+
+  .ct-direct {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(508 * var(--s));
+    margin: 0;
+  }
+  .ct-direct .ct-label {
+    position: absolute;
+    left: 0;
+    top: calc(132 * var(--s));
+  }
+  .ct-direct__title {
+    position: absolute;
+    left: 0;
+    top: calc(172 * var(--s));
+    width: calc(508 * var(--s));
+    margin: 0;
+    font-size: calc(44 * var(--s));
+    line-height: calc(52 * var(--s));
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+  }
+  .ct-direct__text {
+    position: absolute;
+    left: 0;
+    top: calc(244 * var(--s));
+    width: calc(400 * var(--s));
+    margin: 0;
+    font-size: calc(14 * var(--s));
+    line-height: calc(22 * var(--s));
+  }
+  .ct-rows {
+    position: absolute;
+    left: 0;
+    top: calc(322 * var(--s));
+    width: calc(508 * var(--s));
+    margin: 0;
+    padding: calc(36 * var(--s)) 0 0;
+  }
+  .ct-rows::before {
+    display: none;
+  }
+  .ct-note {
+    top: 0;
+    right: calc(2 * var(--s));
+    font-size: calc(10.5 * var(--s));
+  }
+  .ct-squiggle--mail {
+    left: calc(424 * var(--s));
+    right: auto;
+    top: calc(35 * var(--s));
+    width: calc(40 * var(--s));
+    height: calc(20 * var(--s));
+  }
+  .ct-row--email {
+    margin-top: 0;
+    padding: calc(24 * var(--s)) 0 0;
+    height: calc(175 * var(--s));
+    border-top: 1px solid var(--ct-hair);
+    border-bottom: 1px solid var(--ct-hair);
+  }
+  .ct-micro {
+    font-size: calc(8 * var(--s));
+    line-height: calc(10 * var(--s));
+  }
+  .ct-email {
+    margin-top: calc(22 * var(--s));
+    font-size: calc(32 * var(--s));
+    line-height: calc(38 * var(--s));
+    letter-spacing: -0.048em;
+  }
+  .ct-copy {
+    position: absolute;
+    left: 0;
+    top: calc(117 * var(--s));
+    height: calc(28 * var(--s));
+    margin: 0;
+    padding: 0 calc(11 * var(--s));
+    font-size: calc(8.5 * var(--s));
+  }
+  .ct-gap {
+    display: block;
+    height: calc(46 * var(--s));
+    border-bottom: 1px solid var(--ct-hair);
+  }
+  .ct-row--link {
+    justify-content: flex-start;
+    gap: 0;
+    padding: calc(17 * var(--s)) 0 0;
+  }
+  .ct-link-label {
+    width: calc(195 * var(--s));
+    font-size: calc(10.5 * var(--s));
+  }
+  .ct-link {
+    font-size: calc(9 * var(--s));
+  }
+  .ct-quote {
+    position: absolute;
+    left: 0;
+    top: calc(744 * var(--s));
+    width: calc(508 * var(--s));
+    margin: 0;
+    padding: calc(25 * var(--s)) calc(20 * var(--s)) 0 calc(25 * var(--s));
+    height: calc(93 * var(--s));
+    font-size: calc(13 * var(--s));
+    line-height: calc(22 * var(--s));
+  }
+
+  .ct-last {
+    height: calc(683 * var(--s));
+    margin: 0 calc(156 * var(--s));
+    padding: 0;
+  }
+  .ct-last .ct-label {
+    position: absolute;
+    left: 0;
+    top: calc(132 * var(--s));
+  }
+  .ct-last__title {
+    position: absolute;
+    left: 0;
+    top: calc(190 * var(--s));
+    width: calc(1100 * var(--s));
+    margin: 0;
+    font-size: calc(88 * var(--s));
+    line-height: calc(83.5 * var(--s));
+    letter-spacing: -0.06em;
+  }
+  .ct-last__link-wrap {
+    position: absolute;
+    right: 0;
+    top: calc(514 * var(--s));
+    margin: 0;
+  }
+  .ct-back {
+    gap: calc(40 * var(--s));
+    padding-bottom: calc(8 * var(--s));
+    border-bottom: 1px solid var(--ct-gold);
+    font-size: calc(10 * var(--s));
+  }
+  .ct-back span {
+    padding-bottom: 0;
+    border: 0;
+  }
+}

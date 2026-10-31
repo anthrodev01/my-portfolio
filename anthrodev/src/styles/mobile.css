@@ -1,0 +1,256 @@
+/* ==========================================================================
+   Phone layout (< 768px) — built from the mobile Figma (390px artboard).
+
+   Desktop (>= 900px) and the tablet range (768–899px) are untouched by
+   this file. Sizes below equal the Figma values at 390px and scale gently
+   with the viewport up to 767px.
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* ---- Hero ----------------------------------------------------------- */
+  .hero {
+    padding-top: 0;
+  }
+  .hero__grid {
+    display: block;
+  }
+  .hero__title {
+    margin-top: -5px;
+    max-width: 8.9em; /* gives the Figma line breaks: "I design digital / products that / make complex / things feel simple." */
+    margin-left: 0;
+    font-size: clamp(1.75rem, 8.2vw, 2.75rem); /* 32px */
+    line-height: 1.28;
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+  .hero__title .line {
+    display: inline;
+  }
+  /* The gold word in line 3 is tracked out slightly in the Figma (softened so it scales well) */
+  .hero__title .line > .accent {
+    letter-spacing: 0.05em;
+  }
+  .hero__lede {
+    max-width: 18.2em;
+    margin: 31px 0 0;
+    font-size: clamp(1.0625rem, 4.6vw, 1.375rem); /* 18px */
+    line-height: 1.5;
+    letter-spacing: -0.007em;
+  }
+  .hero__cta {
+    margin-top: 56px;
+  }
+  .hero__cta .btn {
+    padding-inline: 24px;
+    gap: 14px;
+  }
+  .hero__cta .btn--ghost {
+    padding-inline: 20px;
+  }
+
+  .work-intro {
+    padding-top: 67px;
+    padding-bottom: 0;
+  }
+  .work-intro__text {
+    font-size: clamp(1.125rem, 5.13vw, 1.75rem); /* 20px */
+    line-height: 1.4;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    text-wrap: wrap;
+  }
+
+  /* ---- Projects ------------------------------------------------------- */
+  .projects {
+    margin-top: 19px;
+  }
+  .project + .project {
+    margin-top: 20px;
+  }
+  .project[data-media='bleed'] + .project {
+    margin-top: 18px; /* Figma sits Smoothballot closer to KAR */
+  }
+  .project .project__inner,
+  .project--right .project__inner {
+    display: block;
+    margin-inline: -13px; /* the rule runs 11px in from the screen edges */
+    padding-inline: 13px;
+  }
+
+  .project__meta {
+    padding-top: 23px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+  .project__num {
+    letter-spacing: 0;
+  }
+  .project__category {
+    font-size: 10.4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* Category on the title row (Afrixa, KAR) or on the "03" row (Smoothballot) */
+  .project[data-meta='beside'] .project__meta .project__category {
+    display: none;
+  }
+  .project[data-meta='beside'] .project__category--inline {
+    display: block;
+    flex: none;
+    margin-top: 2px;
+    text-align: right;
+  }
+  .project__headline {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .project .project__body,
+  .project--right .project__body {
+    padding-top: 47px;
+  }
+  .project__title {
+    font-size: clamp(1.875rem, 8.2vw, 2.75rem); /* 32px */
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.06em;
+  }
+  .project__desc {
+    max-width: 21.4em;
+    margin-top: 36px;
+    font-size: 15px;
+    line-height: 23px;
+  }
+  .project__body .tags {
+    margin-top: 20px;
+    gap: 6px;
+  }
+  .tags__item {
+    height: 31.5px;
+    padding: 0 12.9px;
+    font-size: 12px;
+    letter-spacing: -0.005em;
+  }
+  .project__facts {
+    margin-top: 16px;
+    gap: 4px 20px;
+  }
+  .project__links {
+    margin-top: 29px;
+    gap: 12px 26px;
+  }
+  .project__body .text-link {
+    padding-bottom: 7px;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+  }
+
+  /* In the mobile Figma the link sits on the right edge, under the left-aligned text */
+  .project--right .project__body .project__links {
+    justify-content: flex-end;
+    margin-right: -11px; /* arrow ends ~13px from the screen edge, as designed */
+  }
+
+  /* Artwork shows whole (never cropped) and runs to the screen edges */
+  .project__media-wrap,
+  .project--right .project__media-wrap {
+    margin-top: 22px;
+    margin-inline: -24px;
+  }
+  /* Gap between the case-study link and the artwork differs per project in the Figma */
+  .project[data-media='inset'] .project__media-wrap {
+    margin-inline: -20px; /* 4px from each screen edge */
+  }
+  .project[data-media='bleed'] .project__media-wrap {
+    margin-top: 35px;
+  }
+  .project[data-media='cover'] .project__media-wrap {
+    margin-top: 41px;
+  }
+  .project__media {
+    border-radius: 3.6px;
+  }
+  .project__media img {
+    aspect-ratio: var(--media-ratio-m, auto);
+  }
+  .project[data-media='cover'] .project__media {
+    border-radius: 0;
+  }
+  .project[data-media='cover'] .project__media img {
+    aspect-ratio: 390 / 279.5;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* ---- Contact -------------------------------------------------------- */
+  .contact {
+    margin-top: 43px;
+    padding-top: 47px;
+    padding-bottom: 0;
+  }
+  .contact__grid {
+    row-gap: 36px;
+  }
+  .contact__title {
+    margin-left: 0;
+    font-size: clamp(2rem, 9.23vw, 3rem); /* 36px */
+    line-height: 1.29;
+    letter-spacing: -0.05em;
+  }
+  .contact__title .line {
+    display: inline;
+  }
+  .contact__lede {
+    max-width: 19.8em;
+    font-size: 15px;
+    line-height: 23px;
+  }
+  .contact__list {
+    margin-top: 16px;
+  }
+  .contact__row {
+    min-height: 0;
+    margin-top: 12px;
+    padding: 0;
+    border-bottom: 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .contact__row:first-child {
+    margin-top: 0;
+  }
+  .contact__row dt {
+    font-size: 12px;
+    letter-spacing: 0.047em;
+  }
+  .contact__row dd {
+    text-align: right;
+  }
+  .contact__link {
+    font-size: 14px;
+    text-underline-offset: 2px;
+  }
+  .contact__cta {
+    margin: 26px 0 0;
+  }
+
+  .site-footer {
+    padding-top: 36px;
+    padding-bottom: 21px;
+  }
+  .site-footer__logo {
+    margin-left: -2px;
+  }
+}
+
+/* Narrow phones: let the LinkedIn URL wrap after "linkedin.com/" as in the design */
+@media (max-width: 479px) {
+  .contact__row dd {
+    max-width: 176px;
+  }
+}

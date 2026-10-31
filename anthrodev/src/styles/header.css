@@ -1,0 +1,163 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgb(255 255 255 / 0.92);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.site-header__inner {
+  height: var(--header-h);
+  padding-top: 14px; /* optically centres the row on y≈51px, as in the design */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile-only controls are hidden on desktop */
+.site-header__brand,
+.menu-toggle {
+  display: none;
+}
+
+.primary-nav__list {
+  display: flex;
+  align-items: center;
+  /* 118px at the 1390 artboard */
+  gap: clamp(1.5rem, 8.4vw, 7.3rem);
+}
+
+.primary-nav__link {
+  position: relative;
+  display: inline-block;
+  padding: 6px 0;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.012em;
+  line-height: 1;
+  text-decoration: none;
+}
+.primary-nav__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s var(--ease);
+}
+.primary-nav__link:hover::after,
+.primary-nav__link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.primary-nav__logo a {
+  display: block;
+  border-radius: 16px;
+  transition: transform 0.35s var(--ease);
+}
+.primary-nav__logo a:hover {
+  transform: translateY(-2px) rotate(-3deg);
+}
+.primary-nav__logo img {
+  width: 69px;
+  height: 69px;
+}
+
+/* ---- Mobile navigation ------------------------------------------------- */
+@media (max-width: 767px) {
+  .site-header {
+    /* backdrop-filter would make the header the containing block of the
+       fixed-position menu panel (collapsing it), so phones use a solid fill. */
+    background: var(--bg);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom-color: transparent;
+    transition: border-color 0.25s var(--ease);
+  }
+  .site-header.is-scrolled,
+  .site-header.is-open {
+    --header-h: 68px;
+    border-bottom-color: var(--rule);
+  }
+
+  .site-header__inner {
+    padding: 0 16px 0 14px; /* hamburger centre x=36, logo right edge 16px from screen edge */
+    justify-content: space-between;
+    transition: height 0.3s var(--ease);
+  }
+
+  .site-header__brand {
+    display: block;
+    border-radius: 12px;
+  }
+  .site-header__brand img {
+    width: 51px;
+    height: 51px;
+    transition: width 0.3s var(--ease), height 0.3s var(--ease);
+  }
+  .is-scrolled .site-header__brand img,
+  .is-open .site-header__brand img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .primary-nav {
+    position: fixed;
+    inset: var(--header-h) 0 0 0;
+    background: var(--bg);
+    padding: 24px var(--gutter) 48px;
+    overflow-y: auto;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.25s var(--ease), transform 0.3s var(--ease), visibility 0s linear 0.3s;
+  }
+  .is-open .primary-nav {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition-delay: 0s;
+  }
+
+  .primary-nav__list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  .primary-nav__logo {
+    display: none;
+  }
+  .primary-nav__list li {
+    border-bottom: 1px solid var(--hairline);
+  }
+  .primary-nav__link {
+    display: block;
+    padding: 22px 0;
+    font-size: 2rem;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+  .primary-nav__link::after {
+    display: none;
+  }
+}

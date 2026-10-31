@@ -1,0 +1,222 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+h1,
+h2,
+p,
+ul,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Heading accent (the gold words) */
+.accent {
+  color: var(--gold-text);
+}
+
+/* Focus — visible for keyboard users only */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+main:focus,
+section[tabindex='-1']:focus {
+  outline: none;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--ink);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible {
+  transform: none;
+  outline-color: #fff;
+}
+
+/* Anchored sections sit below the sticky header */
+#work,
+#contact,
+.project {
+  scroll-margin-top: var(--anchor-offset);
+}
+
+/* ---- Shared components ------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 23px;
+  height: 46px;
+  padding: 0 34px;
+  border-radius: 12px;
+  background: var(--gold);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 0.25s var(--ease), transform 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+.btn__icon {
+  transition: transform 0.3s var(--ease);
+}
+.btn:hover {
+  background: var(--gold-hover);
+  box-shadow: 0 8px 20px -10px rgb(160 108 14 / 0.7);
+}
+.btn:hover .btn__icon {
+  transform: translate(2px, 2px);
+}
+.btn:active {
+  transform: scale(0.98);
+}
+/* Secondary button: outline, same height */
+.btn--ghost {
+  gap: 10px;
+  padding: 0 24px;
+  border: 1px solid #cfcdc6;
+  background: transparent;
+  color: var(--ink);
+}
+.btn--ghost:hover {
+  background: #fff;
+  border-color: var(--ink);
+  box-shadow: 0 8px 20px -14px rgb(0 0 0 / 0.35);
+}
+.btn--ghost:hover .btn__icon--out {
+  transform: translate(2px, -2px);
+}
+
+.text-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 25px;
+  padding: 0 2px 6px 0;
+  color: var(--gold-ink);
+  font-size: 13px;
+  letter-spacing: -0.02em;
+  line-height: 16px;
+  text-decoration: none;
+}
+/* Underline is a pseudo-element so it can animate on hover */
+.text-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left center;
+  transition: transform 0.35s var(--ease);
+}
+.text-link__icon {
+  flex: none;
+  transition: transform 0.3s var(--ease);
+}
+.text-link:hover::after {
+  transform: scaleX(0.82);
+}
+.text-link:hover .text-link__icon {
+  transform: translate(3px, -3px);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.tags__item {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 13px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 12px;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  white-space: nowrap;
+}

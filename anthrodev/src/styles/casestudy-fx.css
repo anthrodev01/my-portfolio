@@ -1,0 +1,1300 @@
+/* ==========================================================================
+   Afrixa case study — creative layer
+
+   Everything here is additive: it never changes box sizes or positions, so
+   the layout stays pinned to the Figma files. Rules of the road:
+     - colour / shadow / state changes are for everyone
+     - anything that moves lives inside prefers-reduced-motion: no-preference
+     - pointer effects live inside (hover: hover)
+     - entrances use `animation … backwards` so hover transitions are never
+       held back by a stagger delay
+     - movement uses the individual `translate` / `scale` / `rotate`
+       properties so it composes with the `transform` used by .reveal
+   ========================================================================== */
+
+/* ---- Reading progress --------------------------------------------------- */
+.cs-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  height: 2px;
+  pointer-events: none;
+}
+.cs-progress__bar {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #57e5cc, #7dd326 60%, #e2e526);
+  transform: scaleX(var(--p, 0));
+  transform-origin: 0 50%;
+}
+
+/* ---- Spotlight surfaces (cursor-following glow) ------------------------- */
+.cs-spot {
+  position: relative;
+  isolation: isolate;
+}
+.cs-spot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(22 101 52 / 0.07),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.35s var(--ease);
+  pointer-events: none;
+}
+.cs-solution__card.cs-spot::after {
+  background: radial-gradient(
+    280px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(255 255 255 / 0.13),
+    transparent 70%
+  );
+}
+@media (hover: hover) {
+  .cs-spot:hover::after {
+    opacity: 1;
+  }
+}
+
+/* ---- Hero --------------------------------------------------------------- */
+.cs-fact dd,
+.cs-fact dt {
+  transition: color 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .cs-fact:hover dd {
+    color: var(--cs-green);
+  }
+}
+.cs-back svg {
+  transition: translate 0.3s var(--ease);
+}
+.cs-back:hover svg,
+.cs-back:focus-visible svg {
+  translate: -3px 0;
+}
+
+/* ---- Problem cards ------------------------------------------------------ */
+.cs-card {
+  position: relative;
+  transition: background-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.cs-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--cs-green);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.55s var(--ease);
+}
+.cs-card__num {
+  transition: color 0.3s var(--ease);
+}
+.cs-card__title {
+  transition: color 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .cs-card:hover {
+    background: #fff;
+    box-shadow: 0 18px 34px -20px rgb(20 83 45 / 0.45), 0 0 0 1px var(--cs-line);
+  }
+  .cs-card:hover::before {
+    transform: scaleX(1);
+  }
+  .cs-card:hover .cs-card__num,
+  .cs-card:hover .cs-card__title {
+    color: var(--cs-green);
+  }
+}
+
+/* ---- Solution: hero card + modules ------------------------------------- */
+.cs-solution__card {
+  overflow: hidden;
+  transition: box-shadow 0.45s var(--ease);
+}
+/* Concentric "connected workspace" rings */
+.cs-solution__card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: repeating-radial-gradient(
+    circle at 92% 112%,
+    rgb(255 255 255 / 0.1) 0 1px,
+    transparent 1px calc(34 * var(--m))
+  );
+  -webkit-mask-image: radial-gradient(circle at 92% 112%, #000 0, transparent 78%);
+  mask-image: radial-gradient(circle at 92% 112%, #000 0, transparent 78%);
+  transform-origin: 92% 112%;
+  transition: transform 1s var(--ease);
+  pointer-events: none;
+}
+/* A single teal "node" that sits on the outer ring */
+.cs-solution__card-note {
+  position: relative;
+}
+@media (hover: hover) {
+  .cs-solution__card:hover {
+    box-shadow: 0 30px 60px -28px rgb(20 83 45 / 0.7);
+  }
+}
+
+.cs-module {
+  transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease), background-color 0.35s var(--ease);
+}
+.cs-module::before {
+  transition: background-color 0.35s var(--ease);
+}
+.cs-module__num,
+.cs-module__title {
+  transition: color 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .cs-module:hover {
+    border-color: #9ab6a6;
+    box-shadow: 0 16px 30px -22px rgb(20 83 45 / 0.5);
+  }
+  .cs-module:hover::before {
+    background: var(--cs-green);
+  }
+  .cs-module:hover .cs-module__num {
+    color: var(--cs-gold);
+  }
+  .cs-module:hover .cs-module__title {
+    color: var(--cs-green);
+  }
+}
+
+/* ---- Process ------------------------------------------------------------ */
+.cs-process__node ellipse {
+  fill: transparent;
+  pointer-events: all;
+  transition: fill 0.35s var(--ease);
+}
+.cs-process__node text {
+  transition: fill 0.3s var(--ease);
+}
+.cs-process__float {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: scale 0.45s var(--ease);
+}
+@media (hover: hover) {
+  .cs-process__node:hover ellipse {
+    fill: color-mix(in srgb, currentColor 16%, transparent);
+  }
+  .cs-process__node:hover .cs-process__float {
+    scale: 1.08;
+  }
+}
+
+.cs-phase {
+  --bw: 2px;
+  transition: border-color 0.35s var(--ease);
+}
+.cs-phase::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--bw));
+  width: var(--bw);
+  background: var(--cs-green);
+  opacity: 0;
+  pointer-events: none;
+}
+.cs-phase__dot {
+  transition: scale 0.35s var(--ease);
+}
+.cs-phase__title,
+.cs-phase__list li {
+  transition: color 0.3s var(--ease), translate 0.35s var(--ease), border-color 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .cs-phase:hover {
+    border-left-color: var(--cs-green);
+  }
+  .cs-phase:hover .cs-phase__dot {
+    scale: 1.5;
+  }
+  .cs-phase:hover .cs-phase__title {
+    color: var(--cs-green);
+  }
+  .cs-phase__list li:hover {
+    color: var(--cs-ink);
+    border-top-color: var(--cs-green);
+  }
+}
+@media (min-width: 1100px) {
+  .cs-phase {
+    --bw: 1px;
+  }
+}
+
+/* ---- Persona ------------------------------------------------------------ */
+.cs-persona__photo img {
+  transform-origin: 50% 40%;
+  transition: scale 0.9s var(--ease);
+}
+@media (hover: hover) {
+  .cs-persona__photo:hover img {
+    scale: 1.045;
+  }
+}
+
+.cs-list-col li {
+  position: relative;
+  isolation: isolate;
+  transition: color 0.3s var(--ease), translate 0.35s var(--ease);
+}
+.cs-list-col li::before {
+  content: '';
+  position: absolute;
+  inset: 0 calc(-8 * var(--m));
+  z-index: -1;
+  background: linear-gradient(90deg, var(--cs-mint), rgb(238 243 238 / 0));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease);
+}
+@media (hover: hover) {
+  .cs-list-col li:hover {
+    color: var(--cs-ink);
+    translate: 6px 0;
+  }
+  .cs-list-col li:hover::before {
+    transform: scaleX(1);
+  }
+}
+
+/* Quote: oversized quotation mark as a quiet texture */
+.cs-quote {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.cs-quote::before {
+  content: '\201C';
+  content: '\201C' / '';
+  position: absolute;
+  z-index: -1;
+  top: calc(-34 * var(--m));
+  right: calc(18 * var(--m));
+  font-size: calc(230 * var(--m));
+  line-height: 1;
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.06);
+  pointer-events: none;
+}
+.cs-quote::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  right: calc(-60 * var(--m));
+  bottom: calc(-90 * var(--m));
+  width: calc(220 * var(--m));
+  height: calc(220 * var(--m));
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  box-shadow: 0 0 0 calc(26 * var(--m)) rgb(255 255 255 / 0.025);
+  pointer-events: none;
+}
+
+/* ---- Needs table -------------------------------------------------------- */
+.cs-table__row {
+  position: relative;
+  isolation: isolate;
+}
+.cs-table__row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--cs-mint);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease);
+  pointer-events: none;
+}
+.cs-table__num,
+.cs-table__need,
+.cs-table__response {
+  transition: color 0.3s var(--ease), translate 0.4s var(--ease);
+}
+@media (hover: hover) {
+  .cs-table__row:hover::before {
+    transform: scaleX(1);
+  }
+  .cs-table__row:hover .cs-table__num {
+    color: var(--cs-green);
+  }
+  .cs-table__row:hover .cs-table__need {
+    translate: 6px 0;
+  }
+  .cs-table__row:hover .cs-table__response {
+    color: var(--cs-ink);
+  }
+}
+
+/* ---- Information architecture ------------------------------------------ */
+@media (min-width: 700px) {
+  .cs-ia__panel {
+    background-image: radial-gradient(rgb(20 83 45 / 0.16) 1px, transparent 1.3px);
+    background-size: 22px 22px;
+    background-position: 11px 11px;
+  }
+}
+.cs-ia__node {
+  transition: translate 0.35s var(--ease), border-color 0.35s var(--ease), background-color 0.35s var(--ease),
+    box-shadow 0.35s var(--ease), color 0.3s var(--ease);
+}
+.cs-ia__node-num {
+  transition: color 0.3s var(--ease);
+}
+.cs-ia__root {
+  transition: box-shadow 0.45s var(--ease);
+}
+@media (hover: hover) {
+  .cs-ia__node:hover {
+    border-color: var(--cs-green);
+    background: #f7faf7;
+    box-shadow: 0 14px 26px -20px rgb(20 83 45 / 0.6);
+    color: var(--cs-green);
+  }
+  .cs-ia__node:hover .cs-ia__node-num {
+    color: var(--cs-green);
+  }
+  .cs-ia__root:hover {
+    box-shadow: 0 24px 44px -26px rgb(20 83 45 / 0.8);
+  }
+}
+
+/* ---- Core flow ---------------------------------------------------------- */
+.cs-flow__panel {
+  background-image: radial-gradient(rgb(20 83 45 / 0.14) 1px, transparent 1.3px);
+  background-size: 22px 22px;
+  background-position: 11px 11px;
+}
+.cs-flow__box,
+.cs-flow__module {
+  transition: translate 0.35s var(--ease), background-color 0.3s var(--ease), color 0.3s var(--ease),
+    border-color 0.3s var(--ease), box-shadow 0.35s var(--ease);
+}
+@media (hover: hover) {
+  .cs-flow__box:hover {
+    box-shadow: 0 14px 24px -18px rgb(20 83 45 / 0.6);
+  }
+  .cs-flow__box--pill:hover {
+    background: var(--cs-green);
+    color: #fff;
+  }
+  .cs-flow__box--end:hover {
+    background: var(--cs-green);
+    color: #fff;
+  }
+  .cs-flow__box--select:hover {
+    border-color: var(--cs-gold);
+  }
+  .cs-flow__module:hover {
+    color: var(--cs-green);
+  }
+}
+@media (hover: hover) and (min-width: 700px) {
+  .cs-flow__module:hover {
+    border-color: var(--cs-green);
+    box-shadow: 0 14px 24px -18px rgb(20 83 45 / 0.6);
+  }
+}
+
+.cs-journey {
+  transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease), background-color 0.35s var(--ease);
+}
+.cs-journey__n,
+.cs-journey__s {
+  transition: color 0.3s var(--ease), translate 0.35s var(--ease);
+}
+.cs-journey li {
+  cursor: default;
+}
+@media (hover: hover) {
+  .cs-journey:hover {
+    border-color: #9ab6a6;
+    box-shadow: 0 22px 40px -28px rgb(20 83 45 / 0.5);
+  }
+  .cs-journey li:hover .cs-journey__n {
+    color: var(--cs-green);
+  }
+  .cs-journey li:hover .cs-journey__s {
+    translate: 4px 0;
+    color: var(--cs-green);
+  }
+}
+
+/* ---- Screens ------------------------------------------------------------ */
+/* Tabs: every screen shares one grid cell; only the active one is visible */
+.cs-stage {
+  position: relative;
+}
+.cs-panel {
+  min-width: 0;
+}
+/* Only the active screen takes up space, so the section is always as tall as the screen on show */
+.cs-panel:not(.is-active) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.cs-panel.is-active {
+  visibility: visible;
+  opacity: 1;
+}
+.cs-tab:not(:disabled) {
+  cursor: pointer;
+  transition: color 0.3s var(--ease);
+}
+.cs-tab:not(:disabled):hover {
+  color: var(--cs-green);
+}
+.cs-tab:disabled:not([aria-selected='true']) {
+  opacity: 0.55;
+}
+.cs-tab[aria-selected='true'] {
+  cursor: default;
+}
+.cs-tilt picture {
+  display: block;
+}
+.cs-tilt img {
+  transform-origin: 50% 50%;
+  transition: scale 1.1s var(--ease);
+}
+
+/* ---- Reflection --------------------------------------------------------- */
+.cs-learning {
+  position: relative;
+  isolation: isolate;
+}
+.cs-learning::before {
+  content: '';
+  position: absolute;
+  inset: 0 calc(-12 * var(--m));
+  z-index: -1;
+  background: var(--cs-mint);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.55s var(--ease);
+  pointer-events: none;
+}
+.cs-learning__label,
+.cs-learning__title {
+  transition: color 0.3s var(--ease);
+}
+@media (min-width: 1100px) {
+  .cs-learning::before {
+    inset: 0;
+  }
+}
+@media (hover: hover) {
+  .cs-learning:hover::before {
+    transform: scaleY(1);
+  }
+  .cs-learning:hover .cs-learning__label {
+    color: var(--cs-gold);
+  }
+  .cs-learning:hover .cs-learning__title {
+    color: var(--cs-green);
+  }
+}
+
+/* ---- Next project ------------------------------------------------------- */
+.cs-next__title {
+  text-decoration: underline 2px transparent;
+  text-underline-offset: 0.16em;
+  transition: text-decoration-color 0.35s var(--ease), translate 0.4s var(--ease);
+}
+.cs-next__link:hover .cs-next__title,
+.cs-next__link:focus-visible .cs-next__title {
+  text-decoration-color: currentColor;
+  translate: 6px 0;
+}
+
+/* ---- Outro: orbiting process colours, link sweeps ----------------------- */
+.cs-outro {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.cs-outro__inner {
+  position: relative;
+}
+.cs-outro__orbit {
+  position: absolute;
+  z-index: -1;
+  width: calc(520 * var(--m));
+  height: calc(520 * var(--m));
+  top: calc(-120 * var(--m));
+  right: calc(-190 * var(--m));
+  pointer-events: none;
+}
+.cs-orbit__ring {
+  position: absolute;
+  inset: calc(var(--n) * 46 * var(--m));
+  border-radius: 50%;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  rotate: calc(var(--n) * 58deg);
+}
+.cs-orbit__ring i {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 22%, transparent), 0 0 18px var(--c);
+  opacity: 0.9;
+}
+@media (min-width: 700px) {
+  .cs-outro__orbit {
+    width: calc(640 * var(--m));
+    height: calc(640 * var(--m));
+    top: 50%;
+    right: calc(-90 * var(--m));
+    translate: 0 -50%;
+  }
+  .cs-orbit__ring {
+    inset: calc(var(--n) * 58 * var(--m));
+  }
+}
+.cs-outro__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease);
+}
+.cs-outro__link:hover::after,
+.cs-outro__link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* ==========================================================================
+   Motion (only for people who haven't asked for less)
+   ========================================================================== */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes cs-in {
+    from {
+      opacity: 0;
+      translate: 0 14px;
+    }
+  }
+  @keyframes cs-pop {
+    from {
+      opacity: 0;
+      scale: 0.86;
+      translate: 0 10px;
+    }
+  }
+  @keyframes cs-wipe-x {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  @keyframes cs-wipe-y {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  @keyframes cs-bob {
+    0%,
+    100% {
+      translate: 0 -2px;
+    }
+    50% {
+      translate: 0 3px;
+    }
+  }
+  @keyframes cs-float {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 0 -4px;
+    }
+  }
+  @keyframes cs-spin {
+    from {
+      rotate: calc(var(--n) * 58deg);
+    }
+    to {
+      rotate: calc(var(--n) * 58deg + 360deg);
+    }
+  }
+  @keyframes cs-ping {
+    0% {
+      box-shadow: 0 0 0 0 rgb(22 101 52 / 0.45);
+    }
+    100% {
+      box-shadow: 0 0 0 11px rgb(22 101 52 / 0);
+    }
+  }
+  @keyframes cs-draw {
+    0% {
+      transform: scaleY(0);
+      opacity: 1;
+    }
+    55% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scaleY(1);
+      opacity: 0;
+    }
+  }
+  @keyframes cs-glow {
+    0%,
+    22%,
+    100% {
+      box-shadow: 0 0 0 0 rgb(22 101 52 / 0);
+    }
+    10% {
+      box-shadow: 0 0 0 7px rgb(22 101 52 / 0.14);
+    }
+  }
+  @keyframes cs-sheen {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: 0% 0;
+    }
+  }
+
+  /* -- Headline words rise one by one -- */
+  .js .cs-split.reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .js .cs-split .sw__w {
+    display: inline-block;
+    opacity: 0;
+    translate: 0 0.55em;
+    transition: opacity 0.7s var(--ease), translate 0.9s var(--ease);
+    transition-delay: min(calc(var(--i, 0) * 55ms), 900ms);
+  }
+  .js .cs-split.is-visible .sw__w {
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  /* -- Scroll-lit paragraphs -- */
+  .js .sx {
+    color: #b4beb7;
+    transition: color 0.35s var(--ease);
+  }
+  .js .sx.on {
+    color: inherit;
+  }
+
+  /* -- Hero -- */
+  .cs-title__line--accent {
+    background: linear-gradient(100deg, var(--cs-green) 0 40%, #2fd3a9 50%, var(--cs-green) 60% 100%);
+    background-size: 320% 100%;
+    background-position: 100% 0;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    /* room for overshoot of the tight line-height, without moving anything */
+    padding: 0.14em 0.06em;
+    margin: -0.14em -0.06em;
+    animation: rise 0.9s var(--ease) 0.12s both, cs-sheen 2.4s var(--ease) 1s 1 both;
+  }
+  .cs-facts.is-visible .cs-fact {
+    animation: cs-in 0.8s var(--ease) backwards;
+    animation-delay: calc(0.2s + var(--i, 0) * 80ms);
+  }
+
+  /* -- Big artwork: curtain reveal, zoom-settle, gentle pointer tilt -- */
+  .js .cs-figure-wrap picture {
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 1.3s var(--ease);
+  }
+  .js .cs-figure-wrap.is-visible picture {
+    clip-path: inset(0 0 0 0);
+  }
+  .js .cs-tilt img {
+    scale: 1.1;
+  }
+  .js .cs-tilt.is-visible img {
+    scale: 1;
+  }
+  .js .cs-tilt picture,
+  .cs-tilt picture {
+    transform: perspective(1500px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: clip-path 1.3s var(--ease), transform 0.6s var(--ease);
+  }
+  @media (hover: hover) {
+    .cs-tilt.is-visible:hover img {
+      scale: 1.025;
+    }
+  }
+
+  /* -- Section rules draw in (desktop rules are inset pseudo-elements) -- */
+  @media (min-width: 1100px) {
+    .js .cs-section--rule::before,
+    .js .cs-section--hair::before {
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1.4s var(--ease);
+    }
+    .js .cs-section.is-in::before {
+      transform: scaleX(1);
+    }
+  }
+
+  /* -- Cards & modules lift (translate composes with the reveal transform) -- */
+  .js .reveal.cs-card,
+  .js .reveal.cs-module,
+  .js .reveal.cs-journey {
+    transition-property: opacity, transform, translate, background-color, box-shadow, border-color;
+    transition-duration: 0.8s, 0.8s, 0.4s, 0.35s, 0.35s, 0.35s;
+    transition-timing-function: var(--ease);
+  }
+  @media (hover: hover) {
+    .cs-card:hover,
+    .cs-module:hover,
+    .cs-journey:hover {
+      translate: 0 -5px;
+    }
+  }
+  .js .reveal.cs-solution__card {
+    transition-property: opacity, transform, box-shadow;
+    transition-duration: 0.8s, 0.8s, 0.45s;
+    transition-timing-function: var(--ease);
+  }
+  .js .cs-solution__card::before {
+    transform: scale(0.6);
+  }
+  .js .cs-solution__card.is-visible::before {
+    transform: scale(1);
+  }
+  @media (hover: hover) {
+    .cs-solution__card.is-visible:hover::before {
+      transform: scale(1.14);
+    }
+  }
+
+  /* -- Process diagram -- */
+  .cs-process__node {
+    transition: opacity 0.7s var(--ease) var(--d, 0ms), transform 0.8s var(--ease) var(--d, 0ms);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .js .cs-process__node {
+    transform: scale(0.8);
+  }
+  .js .is-visible .cs-process__node {
+    transform: scale(1);
+  }
+  .js .cs-process__loop,
+  .js .cs-process__arrow {
+    opacity: 0;
+    transition: opacity 0.9s var(--ease) 0.6s;
+  }
+  .js .is-visible .cs-process__loop,
+  .js .is-visible .cs-process__arrow {
+    opacity: 1;
+  }
+  .is-visible .cs-process__float {
+    animation: cs-float 6s ease-in-out infinite;
+    animation-delay: calc(var(--d, 0ms) * -4);
+  }
+
+  /* -- Phases -- */
+  .cs-phase::before {
+    transform-origin: top;
+  }
+  .cs-phase.is-visible::before {
+    animation: cs-draw 1.7s var(--ease) both;
+    animation-delay: calc(0.15s + var(--pi, 0) * 0.1s);
+  }
+  .cs-phase.is-visible .cs-phase__dot {
+    animation: cs-ping 2.2s ease-out 2 both;
+    animation-delay: 0.5s;
+  }
+  .cs-phase.is-visible .cs-phase__list li {
+    animation: cs-in 0.7s var(--ease) backwards;
+  }
+  .cs-phase.is-visible .cs-phase__list li:nth-child(1) {
+    animation-delay: 0.45s;
+  }
+  .cs-phase.is-visible .cs-phase__list li:nth-child(2) {
+    animation-delay: 0.55s;
+  }
+  .cs-phase.is-visible .cs-phase__list li:nth-child(3) {
+    animation-delay: 0.65s;
+  }
+  .cs-phase.is-visible .cs-phase__list li:nth-child(4) {
+    animation-delay: 0.75s;
+  }
+  .cs-phase.is-visible .cs-phase__list li:nth-child(5) {
+    animation-delay: 0.85s;
+  }
+
+  /* -- Persona -- */
+  /* (the clip is on the image, not the observed wrapper, so scroll-reveal still fires) */
+  .js .cs-persona__photo img {
+    scale: 1.18;
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 1.25s var(--ease), scale 1.4s var(--ease);
+  }
+  .js .cs-persona__photo.is-visible img {
+    scale: 1;
+    clip-path: inset(0 0 0 0);
+  }
+  @media (hover: hover) {
+    .js .cs-persona__photo.is-visible:hover img {
+      scale: 1.045;
+      transition: scale 0.9s var(--ease);
+    }
+  }
+  .cs-list-col.is-visible li {
+    animation: cs-in 0.7s var(--ease) backwards;
+  }
+  .cs-list-col.is-visible li:nth-child(1) {
+    animation-delay: 0.2s;
+  }
+  .cs-list-col.is-visible li:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+  .cs-list-col.is-visible li:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  .cs-list-col.is-visible li:nth-child(4) {
+    animation-delay: 0.5s;
+  }
+  .cs-list-col.is-visible li:nth-child(5) {
+    animation-delay: 0.6s;
+  }
+  .cs-list-col.is-visible li:nth-child(6) {
+    animation-delay: 0.7s;
+  }
+
+  /* Quote: green panel wipes in, then the words rise */
+  .js .cs-quote.cs-split.reveal {
+    background: linear-gradient(var(--cs-forest), var(--cs-forest)) no-repeat 0 0 / 0% 100%;
+    transition: background-size 1.2s var(--ease);
+  }
+  .js .cs-quote.cs-split.reveal.is-visible {
+    background-size: 100% 100%;
+  }
+  .js .cs-quote .sw__w {
+    transition-delay: calc(0.35s + min(var(--i, 0) * 24ms, 900ms));
+  }
+
+  /* -- Screen tabs: the chosen screen slides in from its side -- */
+  .cs-panel {
+    transition: opacity 0.55s var(--ease), translate 0.8s var(--ease), visibility 0s linear 0.8s;
+  }
+  .cs-panel.is-active {
+    transition-delay: 0s;
+  }
+  .cs-panel.is-before {
+    translate: -8% 0;
+  }
+  .cs-panel.is-after {
+    translate: 8% 0;
+  }
+  .cs-tab[aria-selected='true']::after {
+    animation: cs-wipe-x 0.6s var(--ease) backwards;
+  }
+
+  /* -- IA -- */
+  .cs-ia__panel.is-visible .cs-ia__node {
+    animation: cs-pop 0.7s var(--ease) backwards;
+    animation-delay: calc(0.35s + var(--i, 0) * 70ms);
+  }
+  .cs-ia__panel.is-visible .cs-ia__root {
+    animation: cs-pop 0.8s var(--ease) backwards;
+  }
+  .cs-ia__panel.is-visible .cs-ia__root::after {
+    animation: cs-wipe-y 0.6s var(--ease) 0.25s backwards;
+  }
+  .cs-ia__panel.is-visible .cs-ia__grid::before {
+    animation: cs-wipe-x 0.9s var(--ease) 0.45s backwards;
+  }
+  .cs-ia__panel.is-visible .cs-ia__node::before {
+    animation: cs-wipe-y 0.5s var(--ease) calc(0.6s + var(--i, 0) * 70ms) backwards;
+  }
+  .cs-ia__panel.is-visible .cs-ia__node::after {
+    animation: cs-wipe-y 0.5s var(--ease) calc(0.8s + var(--i, 0) * 70ms) backwards;
+  }
+  @media (hover: hover) {
+    .cs-ia__node:hover {
+      translate: 0 -4px;
+    }
+  }
+
+  /* -- Flow -- */
+  .cs-flow__panel.is-visible .cs-flow__chain > li {
+    animation: cs-in 0.7s var(--ease) backwards;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(6) {
+    animation-delay: 0.6s;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(7) {
+    animation-delay: 0.7s;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(8) {
+    animation-delay: 0.8s;
+  }
+  /* Arrows bob down the chain; boxes pulse in sequence like data passing through */
+  .cs-flow__panel.is-visible .cs-flow__arrow svg {
+    animation: cs-bob 2.2s ease-in-out infinite;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(4) svg {
+    animation-delay: 0.3s;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(7) svg {
+    animation-delay: 0.6s;
+  }
+  .cs-flow__panel.is-visible .cs-flow__box {
+    animation: cs-in 0.7s var(--ease) backwards, cs-glow 7s ease-in-out infinite;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(1) {
+    animation: cs-in 0.7s var(--ease) 0.1s backwards, cs-glow 7s ease-in-out 1.5s infinite;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(3) {
+    animation: cs-in 0.7s var(--ease) 0.3s backwards, cs-glow 7s ease-in-out 2.4s infinite;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(5) {
+    animation: cs-in 0.7s var(--ease) 0.5s backwards, cs-glow 7s ease-in-out 3.3s infinite;
+  }
+  .cs-flow__panel.is-visible .cs-flow__chain > li:nth-child(8) {
+    animation: cs-in 0.7s var(--ease) 0.8s backwards, cs-glow 7s ease-in-out 4.6s infinite;
+  }
+  @media (hover: hover) {
+    .cs-flow__box:hover,
+    .cs-flow__module:hover {
+      translate: 0 -3px;
+    }
+  }
+
+  /* -- Journeys -- */
+  .cs-journey.is-visible li {
+    animation: cs-in 0.65s var(--ease) backwards;
+    animation-delay: calc(0.3s + var(--k, 0) * 90ms);
+  }
+
+  /* -- Outro orbit -- */
+  .cs-orbit__ring {
+    animation: cs-spin 60s linear infinite;
+    animation-duration: calc(34s + var(--n) * 14s);
+  }
+  .cs-orbit__ring:nth-child(even) {
+    animation-direction: reverse;
+  }
+}
+
+/* Reduced motion: the rings simply sit still; every state change is instant
+   (motion.css already zeroes animations and transition durations). */
+
+/* ==========================================================================
+   Screen viewer: expand button on each screen + full-size lightbox
+   ========================================================================== */
+.cs-stage {
+  touch-action: pan-y pinch-zoom;
+}
+.cs-zoom {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: zoom-in;
+}
+.cs-zoom:focus-visible {
+  outline: 2px solid var(--cs-green);
+  outline-offset: -4px;
+}
+.cs-zoom__chip {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px 7px 10px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.94);
+  box-shadow: 0 6px 18px -8px rgb(10 36 23 / 0.5), 0 0 0 1px rgb(10 36 23 / 0.08);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--cs-ink);
+  transition: opacity 0.3s var(--ease), translate 0.3s var(--ease), background-color 0.3s var(--ease),
+    color 0.3s var(--ease);
+}
+@media (hover: hover) {
+  .cs-zoom__chip {
+    opacity: 0;
+    translate: 0 4px;
+  }
+  .cs-figure-wrap:hover .cs-zoom__chip,
+  .cs-zoom:focus-visible .cs-zoom__chip {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .cs-zoom:hover .cs-zoom__chip {
+    background: var(--cs-green);
+    color: #fff;
+  }
+}
+
+html.cs-lock {
+  overflow: hidden;
+}
+.cs-lightbox {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: #0d1912;
+  color: #fff;
+}
+.cs-lightbox[open] {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+.cs-lightbox::backdrop {
+  background: #0d1912;
+}
+.cs-lightbox__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgb(255 255 255 / 0.1);
+}
+.cs-lightbox__title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+.cs-lightbox__count {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgb(255 255 255 / 0.55);
+}
+.cs-lightbox__actions {
+  display: flex;
+  gap: 8px;
+}
+.cs-lightbox__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.cs-lightbox__btn--icon {
+  width: 40px;
+  padding: 0;
+}
+.cs-lightbox__btn:hover {
+  background: rgb(255 255 255 / 0.12);
+  border-color: rgb(255 255 255 / 0.5);
+}
+.cs-lightbox :focus-visible {
+  outline: 2px solid #7dd326;
+  outline-offset: 2px;
+}
+.cs-lightbox__body {
+  display: flex;
+  min-height: 0;
+  padding: 20px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: rgb(255 255 255 / 0.3) transparent;
+}
+.cs-lightbox__img {
+  display: block;
+  flex: none;
+  margin: auto;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.7);
+  cursor: zoom-in;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.cs-lightbox__img.is-video {
+  cursor: auto;
+  background: #000;
+}
+.cs-lightbox__img.is-video.is-tall {
+  height: min(calc(100vh - 120px), 840px);
+  max-height: none;
+}
+.cs-lightbox__body.is-actual {
+  cursor: grab;
+}
+.cs-lightbox__body.is-actual .cs-lightbox__img {
+  width: 1440px;
+  max-width: none;
+  max-height: none;
+  cursor: zoom-out;
+}
+.cs-lightbox__body.is-actual.is-natural .cs-lightbox__img {
+  width: auto;
+}
+.cs-lightbox__body.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+.cs-lightbox__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin-top: 22px;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  border-radius: 50%;
+  background: rgb(13 25 18 / 0.7);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.cs-lightbox__nav:hover {
+  background: rgb(255 255 255 / 0.18);
+  border-color: rgb(255 255 255 / 0.55);
+}
+.cs-lightbox__nav--prev {
+  left: 14px;
+}
+.cs-lightbox__nav--next {
+  right: 14px;
+}
+@media (min-width: 700px) {
+  .cs-lightbox__body {
+    padding-inline: 76px;
+  }
+}
+@media (max-width: 699px) {
+  .cs-lightbox__bar {
+    padding: 8px 12px;
+  }
+  .cs-lightbox__body {
+    padding: 10px;
+  }
+  .cs-lightbox__btn span {
+    font-size: 12px;
+  }
+  .cs-lightbox__nav {
+    top: auto;
+    bottom: 16px;
+    margin-top: 0;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes cs-lb-in {
+    from {
+      opacity: 0;
+    }
+  }
+  @keyframes cs-lb-img {
+    from {
+      opacity: 0;
+      scale: 0.97;
+    }
+  }
+  .cs-lightbox[open] {
+    animation: cs-lb-in 0.3s var(--ease);
+  }
+  .cs-lightbox__img {
+    animation: cs-lb-img 0.5s var(--ease);
+  }
+}
+
+/* Placeholder while the case-study code loads */
+.page-loading {
+  min-height: 100vh;
+}
